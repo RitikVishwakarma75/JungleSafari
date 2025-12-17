@@ -1,0 +1,13 @@
+/* Global Styles */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-image: url("https://images.pexels.com/photos/3333549/pexels-photo-3333549.jpeg");
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  background-repeat: no-repeat;
+  scroll-behavior: smooth;
+}

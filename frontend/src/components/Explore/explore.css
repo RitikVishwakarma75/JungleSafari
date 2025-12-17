@@ -1,0 +1,210 @@
+/* explore.css */
+.body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.explore {
+  width: 100%;
+  height: 700px;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  text-align: center;
+  background: rgba(130, 93, 93, 0.986);
+  position: relative; /* ✅ change this */
+  background-color: #242c10a1;
+}
+
+.explorePara {
+  font-size: 1.5rem;
+  margin-top: 20px;
+  max-width: 800px;
+}
+
+
+.sectionOne {
+  position: relative;
+  background-image: url("https://images.pexels.com/photos/3551498/pexels-photo-3551498.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #d9d8a6;
+  padding: 100px 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  min-height: 76vh;
+  font-family: sans-serif;
+}
+
+/* Safari content styles */
+.safari-content {
+  max-width: 600px;
+}
+
+.safari-content h1 {
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+  line-height: 1.2;
+}
+
+.safari-content h4 {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #c8c78a;
+}
+
+.safari-content p {
+  font-weight: bold;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #e2e1bb;
+}
+
+/* Video styles */
+.safari-video {
+  background-color: #f5bebe48;
+  width: 450px;
+  height: 700px;
+  object-fit: cover;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  
+}
+
+.sectionTwo {
+  background-color: #242c10a1;
+  color: #e7e6b7;
+  display: flex;
+  flex-direction: column; /* ✅ stack vertically: cards + button */
+  align-items: center; /* ✅ center everything */
+  text-align: center;
+  padding-top: 100px;
+  padding-bottom: 30px;
+  gap: 40px;
+}
+
+.sectionTwo h1 {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  color: #d9d8a6;
+}
+
+.service-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 60px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.service-card {
+  width: 320px;
+  background: transparent;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.service-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.service-card h4 {
+  color: #b4ad7a;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.service-card h2 {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.service-card p {
+  line-height: 1.6;
+  font-size: 1rem;
+  color: #dddcb8;
+}
+
+.explore-btn {
+  background-color: #d2d19e;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-size: 1rem;
+  color: #2b2b2b;
+  cursor: pointer;
+  transition: 0.3s ease;
+  margin-top: 20px;
+}
+
+.explore-btn:hover {
+  background-color: #c4c283;
+}
+
+
+/* --- Add This Code at the End of explore.css --- */
+
+/* For tablets and smaller desktops (992px or less) */
+@media (max-width: 992px) {
+  .sectionOne {
+    flex-direction: column; /* Stack text and video vertically */
+    text-align: center;
+    padding: 80px 40px; /* Reduce padding */
+  }
+
+  .safari-video {
+    width: 80%; /* Make video responsive */
+    max-width: 350px; /* But not too big */
+    height: 200px; /* Maintain aspect ratio */
+  }
+
+  .safari-content h1 {
+    font-size: 3rem; /* Reduce heading size */
+  }
+
+  .service-card {
+    max-width: 300px; /* Slightly reduce card width */
+  }
+}
+
+/* For mobile phones (768px or less) */
+@media (max-width: 768px) {
+  .sectionOne {
+    padding: 60px 20px; /* Further reduce padding */
+  }
+
+  .safari-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .safari-content p {
+    font-size: 1rem; /* Adjust paragraph text size */
+  }
+
+  .service-cards {
+    gap: 30px; /* Reduce the gap between cards */
+  }
+
+  .service-card {
+    /* Allow one card per row by making it wider */
+    width: 80%;
+    max-width: 350px;
+  }
+
+  .sectionTwo {
+    padding-top: 60px;
+  }
+}

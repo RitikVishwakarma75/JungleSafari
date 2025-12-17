@@ -1,0 +1,177 @@
+/* Import a custom font for a modern look */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+/* --- General Styles --- */
+.footer-container {
+  background-color: #f3edde; /* Light background color */
+  color: #1a3a2d;           /* Dark text color for contrast */
+  font-family: 'Montserrat', sans-serif;
+  padding: 60px 5%;        /* Use percentage for flexible padding */
+  width: 100%;
+  box-sizing: border-box;
+  font-weight: bold;
+
+  /* Flexbox for layout */
+  display: flex;
+  justify-content: space-between; /* Pushes left/right sections apart */
+  align-items: flex-start;        /* Aligns columns to the top */
+  gap: 40px;                      /* Space between columns */
+  flex-wrap: wrap;                /* Allows columns to wrap on smaller screens */
+}
+
+/* --- Left Column: Logo & Newsletter --- */
+.footer-left {
+  flex: 1 1 300px; /* Flex-grow, flex-shrink, flex-basis. Allows wrapping. */
+  display: flex;
+  flex-direction: column;
+  
+  max-width: 400px; /* Prevents the form from becoming too wide */
+}
+
+
+
+.footer-logo {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  color: #1a3a2d;
+}
+
+.newsletter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  
+}
+
+.newsletter-form input[type="email"] {
+  background-color: transparent;
+  border: 1px solid #1a3a2d;
+  border-radius: 25px; /* Slightly more rounded */
+  padding: 12px 20px;
+  font-size: 1rem;
+  color: #1a3a2d;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+  
+}
+
+.newsletter-form input[type="email"]::placeholder {
+  color: #6a8c7b;
+}
+
+.newsletter-form input[type="email"]:focus {
+  border-color: #4e7a68;
+  
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between checkbox and label */
+  
+}
+
+.checkbox-group input[type="checkbox"] {
+  accent-color: #1a3a2d;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  
+}
+
+.checkbox-group label {
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.submit-newsletter-btn {
+  background-color: #1a3a2d;
+  color: #f3edde;
+  border: none;
+  border-radius: 25px; /* Match input rounding */
+  padding: 12px 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.submit-newsletter-btn:hover {
+  background-color: #3b5a4d;
+}
+
+/* --- Right Column: Contact, Legal, Copyright --- */
+.footer-right {
+  flex: 2 1 400px; /* Allows this section to take more space but also wrap */
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.contact-info,
+.legal-info,
+.copyright-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  min-width: 160px; /* Prevents text from being too squished */
+}
+
+.legal-info a,
+.copyright-info a {
+  color: #1a3a2d;
+  text-decoration: none;
+  transition: text-decoration 0.3s ease;
+}
+
+.legal-info a:hover,
+.copyright-info a:hover {
+  text-decoration: underline;
+}
+
+/* For screen reader accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* --- Responsive adjustments for Mobile --- */
+@media (max-width: 768px) {
+  .footer-container {
+    /* Stack all content vertically and center it */
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .footer-left {
+    align-items: center; /* Center the logo and form */
+    margin-bottom: 40px; /* Add space between the stacked sections */
+    max-width: 100%;     /* Allow form to use available width */
+  }
+
+  .footer-right {
+    /* Stack the info columns (contact, legal, etc.) and center them */
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+}

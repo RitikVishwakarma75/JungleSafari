@@ -1,0 +1,153 @@
+/* Import a custom font for a modern look */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.contact-container {
+  min-height: 70vh;
+  width: 100%;
+  background-color: #3b5a4d; /* Dark green background */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  font-family: "Montserrat", sans-serif;
+  color: #fff; /* White text */
+  box-sizing: border-box;
+}
+
+.contact-content {
+  max-width: 600px;
+  width: 100%;
+}
+
+.contact-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #fff; /* White */
+}
+
+.contact-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  text-align: center;
+  color: #fff; /* White */
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 40px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  flex: none;
+  width: 100%;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  color: #fff; /* White label text */
+  margin-bottom: 8px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group textarea {
+  background-color: #3b5a4d; /* Dark green input background */
+  border: 1px solid #708a7e;
+  border-radius: 4px;
+  padding: 12px 15px;
+  font-size: 1rem;
+  color: #fff; /* White input text */
+  outline: none;
+  transition: border-color 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: rgba(255, 255, 255, 0.7); /* Faded white placeholder */
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #77ac96; /* Green focus */
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.submit-button {
+  background-color: #3b5a4d; /* Match background */
+  border: 1px solid #708a7e;
+  color: #fff; /* White text */
+  padding: 12px 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  align-self: center;
+  margin-top: 20px;
+  min-width: 150px;
+}
+
+.submit-button:hover {
+  background-color: rgba(112, 138, 126, 0.2);
+  border-color: #a7d0bf;
+}
+
+/* --- Responsive adjustments --- */
+@media (max-width: 900px) {
+  .contact-container {
+    padding: 60px 50px;
+  }
+
+  .contact-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-container {
+    padding: 40px 20px;
+  }
+
+  .contact-title {
+    font-size: 2rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .submit-button {
+    width: 100%; /* Full-width on mobile */
+  }
+}

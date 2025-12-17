@@ -1,0 +1,187 @@
+/* HERO SECTION */
+.zones-hero {
+  background: url("")
+    center/cover no-repeat;
+  position: relative;
+  height: 65vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fcfcfc;
+}
+
+.zones-hero .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.hero-text {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 1.5rem;
+}
+
+.hero-text h1 {
+  font-size: 3rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #f6f3ec;
+}
+
+.hero-text p {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: #d8d5cf;
+}
+
+/* INTRO SECTION */
+.zones-intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2rem;
+  padding: 4rem 2rem;
+  background: #fdfbf7;
+}
+
+.intro-text {
+  flex: 1;
+}
+
+.intro-text h2 {
+  color: #2d572c;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.intro-text p {
+  font-size: 1.1rem;
+  color: #444;
+}
+
+.intro-image {
+  flex: 1;
+  text-align: center;
+}
+
+.intro-image img {
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* ZONES GRID SECTION */
+.zones-grid {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #faf8f2;
+}
+
+.zones-grid h2 {
+  color: #2d572c;
+  margin-bottom: 2rem;
+  font-size: 2.2rem;
+}
+
+.zones-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  gap: 2.5rem;
+}
+
+.zone-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.zone-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.zone-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.zone-info {
+  padding: 1.5rem;
+  text-align: left;
+}
+
+.zone-info h3 {
+  color: #2d572c;
+  margin-bottom: 0.5rem;
+}
+
+.zone-info p {
+  color: #555;
+  margin-bottom: 0.8rem;
+}
+
+.zone-info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+
+.zone-info li {
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+
+.book-btn {
+  background: #2d572c;
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1.3rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.book-btn:hover {
+  background: #3b7339;
+}
+
+/* CTA SECTION */
+.zones-cta {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #2d572c;
+  color: #fff;
+}
+
+.zones-cta h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.zones-cta p {
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  color: #e0e0e0;
+  font-size: 1.1rem;
+}
+
+.cta-btn {
+  background: #fff;
+  color: #2d572c;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.cta-btn:hover {
+  transform: scale(1.05);
+}
