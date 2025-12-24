@@ -1,115 +1,117 @@
-import "./location.css";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import "./location.css";
+import CorbettMap, { MAP_ZONES } from "../components/CorbettMap";
+import { STAYS } from "../assets/data/stays";
 
 export default function Locations() {
   const navigate = useNavigate();
+  const [selectedZone, setSelectedZone] = useState(null);
+
+  /* ✅ SAFE + FIXED FILTER */
+  const nearbyStays = selectedZone
+    ? STAYS.filter(
+        (stay) =>
+          stay.zone.trim().toLowerCase() ===
+          selectedZone.name.trim().toLowerCase()
+      )
+    : [];
+
   const zones = [
     {
       name: "Dhikala Zone",
       image:
         "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/27/34/a1/caption.jpg?w=1400&h=-1&s=1",
-      desc: "Dhikala is the heart of Jim Corbett National Park — the largest and most iconic zone. Famous for its sweeping grasslands, roaming elephants, and the majestic Royal Bengal Tiger, Dhikala offers the purest essence of the wild.",
+      desc: "Dhikala is the heart of Jim Corbett National Park — famous for grasslands, elephants and tigers.",
       features: [
         "Best for Tiger Sightings",
-        "Canter & Jeep Safari Available",
-        "Forest Rest House Stay Option",
+        "Canter & Jeep Safari",
+        "Forest Rest House",
       ],
     },
     {
       name: "Bijrani Zone",
       image: "https://jim-corbett-gov.in/images/bijrani-lodge.jpg",
-      desc: "Bijrani is where wilderness meets serenity. Known for its diverse landscapes — from dense Sal forests to open meadows — it’s a photographer’s paradise, especially during golden-hour safaris.",
-      features: [
-        "Rich Flora & Fauna",
-        "Open Grasslands",
-        "Ideal for Morning Safari",
-      ],
+      desc: "Bijrani is a photographer’s paradise with sal forests and open meadows.",
+      features: ["Rich Flora & Fauna", "Open Grasslands", "Morning Safari"],
     },
     {
       name: "Jhirna Zone",
       image:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJj0-wH_cMnreQq6LVC-MhRAL2uAzGEk4tLg&s",
-      desc: "Open throughout the year, Jhirna is a vibrant zone teeming with wildlife. Sloth bears, elephants, and exotic birds call this place home — making it perfect for those who crave nature in every season.",
-      features: [
-        "Open All Year",
-        "Birdwatching Hotspot",
-        "Frequent Elephant Sightings",
-      ],
+      desc: "Open all year, great for birds, bears and elephants.",
+      features: ["Open All Year", "Birdwatching", "Elephants"],
     },
     {
       name: "Dhela Zone",
       image:
         "https://www.corbetttigerreserve.co.in/images/corbett-budget-tour.jpg",
-      desc: "The peaceful Dhela zone offers a serene mix of dense forest, grasslands, and thickets. It’s less crowded, making it perfect for travelers seeking calm, scenic safaris with a hint of tiger luck.",
-      features: ["Peaceful Route", "Diverse Wildlife", "Scenic Safari Trails"],
+      desc: "Peaceful zone with scenic safari trails.",
+      features: ["Peaceful Route", "Scenic Trails", "Less Crowded"],
     },
     {
       name: "Durga Devi Zone",
       image: "https://t.eucdn.in/tourism/lg/durga-devi-gate-4125670.webp",
-      desc: "With hilly terrain and sparkling streams, Durga Devi is a treat for adventure lovers. Known for leopards and fishing cats, it’s the wild side of Corbett that photographers adore.",
-      features: [
-        "Hilly Landscape",
-        "Leopards & Fishing Cats",
-        "Perfect for Bird Photography",
-      ],
+      desc: "Hilly terrain, leopards and fishing cats.",
+      features: ["Hilly Landscape", "Leopards", "Bird Photography"],
     },
     {
       name: "Garjiya Zone",
       image:
         "https://www.corbett-national-park.com/socialimg/garjia-temple.jpg",
-      desc: "Garjiya is the newest zone, offering untouched landscapes and calm river belts. Perfect for families and first-time visitors seeking a smooth introduction to Corbett’s wild charm.",
-      features: ["New Safari Zone", "Beautiful River Belts", "Family Friendly"],
+      desc: "New zone with river belts, perfect for families.",
+      features: ["New Safari Zone", "River Belts", "Family Friendly"],
     },
     {
       name: "Sitabani Zone",
       image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_Jb4CVq3pJ1f6hcsFfozuMMbUFo3D9kApuw&s   ",
-      desc: "Sitabani lies outside the main reserve but offers soul-soothing beauty. Known for its mythological link with Goddess Sita and calm surroundings, it’s perfect for birdwatching and peaceful drives.",
-      features: [
-        "Buffer Zone",
-        "Mythological Significance",
-        "Birdwatching Paradise",
-      ],
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_Jb4CVq3pJ1f6hcsFfozuMMbUFo3D9kApuw&s",
+      desc: "Buffer zone with mythological significance.",
+      features: ["Buffer Zone", "Mythology", "Birdwatching"],
     },
     {
       name: "Phato Zone",
       image:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBCwRluUKN2Llf_a13O8EEf4uX2HZCH1cg7w&s",
-      desc: "The Phato Zone is Corbett’s newest and largest safari zone, located in the Terai West Forest. It offers dense greenery, abundant wildlife, and stunning views — including the Royal Bengal Tiger. deer, elephants, and diverse birds.",
-      features: [
-        "Largest Safari Zone (2,516.7 ha)",
-        "High Tiger & Wildlife Sightings",
-        "British-Era Forest Rest House",
-      ],
+      desc: "Largest zone with dense greenery and wildlife.",
+      features: ["Largest Zone", "High Tiger Sightings", "Forest Rest House"],
     },
   ];
 
+  /* ✅ ZONE → MAP SYNC */
+  const handleViewOnMap = (zoneName) => {
+    const mapZone = MAP_ZONES.find(
+      (z) => z.name.trim().toLowerCase() === zoneName.trim().toLowerCase()
+    );
+
+    if (mapZone) setSelectedZone(mapZone);
+
+    document
+      .querySelector(".map-wrapper")
+      ?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section className="zones-page">
-      {/* HERO SECTION */}
+      {/* HERO */}
       <div className="zones-hero">
         <div className="overlay"></div>
         <div className="hero-text">
           <h1>Discover the Wilderness</h1>
-          <p>
-            Jim Corbett National Park is divided into several magical zones —
-            each with its own secrets, sounds, and stories.
-          </p>
+          <p>Each zone of Corbett has its own wild story.</p>
         </div>
       </div>
 
-      {/* INTRO SECTION */}
+      {/* INTRO */}
       <div className="zones-intro">
         <div className="intro-text">
           <h2>Where Every Zone Tells a Story</h2>
           <p>
-            From the deep roars echoing through Dhikala to the chirping symphony
-            of Sitabani, every corner of Corbett brings you closer to nature’s
-            heart. Whether you’re an explorer, a photographer, or a peace
-            seeker, there’s a zone that matches your spirit.
+            From tiger roars to bird calls, Corbett offers unforgettable
+            experiences for every explorer.
           </p>
         </div>
-
         <div className="intro-image">
           <img
             src="https://images.news9live.com/wp-content/uploads/2024/03/Jim-Corbett-Reserve.jpg?w=802&enlarge=true"
@@ -118,37 +120,66 @@ export default function Locations() {
         </div>
       </div>
 
-      {/* ZONES GRID SECTION */}
+      {/* MAP */}
+      <CorbettMap selectedZone={selectedZone} />
+
+      {/* STAYS SECTION */}
+      {selectedZone && (
+        <section className="stays-section">
+          <h2>Stays Near {selectedZone.name}</h2>
+          <p>Handpicked resorts and lodges close to your safari zone</p>
+
+          <div className="stays-grid">
+            {nearbyStays.map((stay) => (
+              <div className="stay-card" key={stay.id}>
+                <h3>{stay.name}</h3>
+                <p className="price">💰 {stay.price}</p>
+                <p className="rating">⭐ {stay.rating}</p>
+                <button className="book-btn">Book Stay</button>
+              </div>
+            ))}
+
+            {nearbyStays.length === 0 && (
+              <p className="no-stays">No stays listed for this zone yet.</p>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* ZONES GRID */}
       <div className="zones-grid">
-        <h2>Explore the Zones of Corbett</h2>
+        <h2>Explore the Zones</h2>
         <div className="zones-list">
-          {zones.map((zone, index) => (
-            <div className="zone-card" key={index}>
+          {zones.map((zone, i) => (
+            <div className="zone-card" key={i}>
               <img src={zone.image} alt={zone.name} className="zone-img" />
               <div className="zone-info">
                 <h3>{zone.name}</h3>
                 <p>{zone.desc}</p>
                 <ul>
-                  {zone.features.map((f, i) => (
-                    <li key={i}>🌿 {f}</li>
+                  {zone.features.map((f, idx) => (
+                    <li key={idx}>🌿 {f}</li>
                   ))}
                 </ul>
-                <button className="book-btn">Book Safari</button>
+                <button
+                  className="book-btn"
+                  onClick={() => handleViewOnMap(zone.name)}
+                >
+                  View on Map
+                </button>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* CTA SECTION */}
+      {/* CTA */}
       <div className="zones-cta">
         <h2>Answer the Call of the Jungle</h2>
-        <p>
-          The wild is calling — and your adventure awaits. Choose your zone,
-          pack your camera, and join us for a journey into nature’s untamed
-          beauty.
-        </p>
-        <button onClick={() => navigate("/Booking")} className="cta-btn">Plan Your Safari Now</button>
+        <p>Your adventure awaits in Jim Corbett National Park.</p>
+        <button onClick={() => navigate("/Booking")} className="cta-btn">
+          Plan Your Safari Now
+        </button>
       </div>
     </section>
   );
