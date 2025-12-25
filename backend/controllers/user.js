@@ -3,24 +3,25 @@ const Booking = require("../models/booking");
 const Contact = require("../models/contact");
 
 // Handle Contact Form
+
+
 async function handleContactForm(req, res) {
-  const contactData = req.body;
+  const { firstName, lastName, email, phone, message } = req.body;
 
   try {
     await Contact.create({
-      name: contactData.name,
-      email: contactData.email,
-      message: contactData.message,
-      phone: contactData.phone,
+      name: `${firstName} ${lastName}`,
+      email,
+      phone,
+      message,
     });
 
-    console.log("✅ Contact form data saved:", contactData);
     return res.status(201).json({ message: "Message sent successfully!" });
   } catch (error) {
-    console.error("❌ Error saving contact form:", error);
-    return res.status(500).json({ message: "Server error, please try again." });
+    return res.status(500).json({ message: "Server error" });
   }
 }
+
 
 // Handle Safari Booking
 

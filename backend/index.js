@@ -1,10 +1,18 @@
+// index.js
+require("dotenv").config(); // 🔥 Load env first
+
 const express = require("express");
 const connectMongoDb = require("./connection");
 const applyCommonMiddleware = require("./middlewares/applyCommonMiddleware");
 const userRouter = require("./routes/user");
+const rideRouter = require("./routes/ride");
+const adminRouter = require("./routes/admin");
+
 
 const app = express();
-const PORT = 5000;
+
+// Read PORT from .env
+const PORT = process.env.PORT || 5000;
 
 // Connect to MongoDB
 connectMongoDb();
@@ -12,8 +20,14 @@ connectMongoDb();
 // Apply common middleware
 applyCommonMiddleware(app);
 
-// Use combined routes
+// after app.use("/api", userRouter);
+app.use("/api/rides", rideRouter);
+
+// Routes
 app.use("/api", userRouter);
+
+app.use("/api/admin", adminRouter);
+
 
 // Start server
 app.listen(PORT, () => {
