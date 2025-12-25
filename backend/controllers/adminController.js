@@ -1,6 +1,8 @@
+// backend/controllers/adminController.js
 const Admin = require("../models/admin");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Booking = require("../models/booking");
 
 async function adminLogin(req, res) {
   const { email, password } = req.body;
@@ -30,4 +32,14 @@ async function adminLogin(req, res) {
   }
 }
 
-module.exports = { adminLogin };
+async function getAllBookings(req, res) {
+  try {
+    const bookings = await Booking.find().sort({ createdAt: -1 });
+    res.json(bookings);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch bookings" });
+  }
+}
+
+
+module.exports = { adminLogin, getAllBookings };

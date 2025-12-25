@@ -1,0 +1,31 @@
+ /* frontend/src/pages/admin/admin.css */
+.admin-login,
+.admin-dashboard {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 30px;
+  border-radius: 10px;
+  background: #0f172a;
+  color: white;
+}
+
+.admin-login input {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px;
+}
+
+button {
+  width: 15%;
+  padding: 10px;
+  background: #22c55e;
+  border: none;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.error {
+  color: red;
+  margin-bottom: 10px;
+}

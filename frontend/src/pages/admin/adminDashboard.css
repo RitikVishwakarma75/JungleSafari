@@ -1,0 +1,263 @@
+/* =====================
+   ROOT + BASE
+===================== */
+.admin-dashboard {
+  max-width: 1200px;
+  min-height: auto;
+  margin: 80px auto 0;
+  padding: 40px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  background: radial-gradient(
+      circle at top right,
+      #eef2ff,
+      transparent 60%
+    ),
+    radial-gradient(circle at bottom left, #f0fdf4, transparent 60%),
+    #f8fafc;
+
+  color: #0f172a;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* =====================
+   HEADER
+===================== */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.dashboard-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin-top: 6px;
+}
+
+/* Logout Button */
+.logout-btn {
+  background: linear-gradient(135deg, #ef4444, #fb7185);
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  margin-top: 10px;
+  margin-right: 10px;
+  width: auto;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(239, 68, 68, 0.25);
+  transition: all 0.25s ease;
+}
+
+.logout-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 14px 30px rgba(239, 68, 68, 0.35);
+}
+
+/* =====================
+   STATS
+===================== */
+.stats {
+  display: flex;
+  gap: 28px;
+  margin-bottom: 36px;
+}
+
+.stat-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  padding: 22px 26px;
+  border-radius: 18px;
+  min-width: 200px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  animation: fadeUp 0.6s ease;
+  overflow: hidden;
+}
+
+/* Glow line */
+.stat-card::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: linear-gradient(90deg, #22c55e, #3b82f6);
+}
+
+.stat-card span {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.stat-card h2 {
+  font-size: 30px;
+  margin-top: 8px;
+  font-weight: 700;
+}
+
+
+/* =====================
+   TABLE CARD
+===================== */
+.table-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px);
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.08);
+  overflow-x: auto;
+  animation: fadeUp 0.7s ease;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* ✅ keeps columns aligned */
+}
+
+thead {
+  background: linear-gradient(180deg, #f8fafc, #eef2ff);
+}
+
+th {
+  text-align: center;        /* ✅ center header text */
+  padding: 16px;
+  font-size: 13px;
+  color: #475569;
+  font-weight: 600;
+  vertical-align: middle;    /* ✅ vertical center */
+}
+
+td {
+  padding: 16px;
+  border-top: 1px solid #e5e7eb;
+  font-size: 14px;
+  text-align: center;        /* ✅ center data */
+  vertical-align: middle;    /* ✅ vertical center */
+  white-space: nowrap;       /* ✅ prevents text jump */
+}
+
+/* Row animation */
+tbody tr {
+  opacity: 0;
+  animation: rowFade 0.4s ease forwards;
+}
+
+tbody tr:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(59, 130, 246, 0.04),
+    transparent
+  );
+}
+
+
+/* =====================
+   TAG / BADGE
+===================== */
+.tag {
+  background: linear-gradient(135deg, #e0f2fe, #ecfeff);
+  color: #0369a1;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px rgba(2, 132, 199, 0.15);
+}
+
+/* =====================
+   STATES
+===================== */
+.error {
+  color: #dc2626;
+  margin-top: 12px;
+  font-weight: 500;
+}
+
+.empty {
+  text-align: center;
+  color: #64748b;
+  margin-top: 50px;
+  font-size: 15px;
+}
+
+/* =====================
+   LOADER
+===================== */
+.loader {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  margin: 60px auto;
+  background: conic-gradient(#2563eb, #22c55e, #2563eb);
+  animation: spin 1s linear infinite;
+}
+
+/* =====================
+   GRAPH
+===================== */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 15px;
+}
+
+.mini-graph {
+  width: 320px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  padding: 12px 14px;
+  border-radius: 14px;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+  animation: fadeUp 0.6s ease;
+}
+
+.mini-graph h4 {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 6px;
+}
+
+/* =====================
+   ANIMATIONS
+===================== */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rowFade {
+  to {
+    opacity: 1;
+  }
+}
+
+
+.dashboard-header {
+  position: sticky;
+  top: 0;
+  background: #f8fafc;
+  z-index: 10;
+}

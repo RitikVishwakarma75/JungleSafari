@@ -1,5 +1,7 @@
 // App.jsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import Header from "./components/Header/Header";
 import Home from "./components/Home/Home";
 import About from "./pages/About";
@@ -16,9 +18,11 @@ export default function App() {
     <BrowserRouter>
       <Header />
       {/* <Explore /> */}
+
       <Routes>
         <Route path="/" element={<Home />} />
-
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/about" element={<About />} />
 
         <Route path="/locations" element={<Locations />} />
