@@ -139,6 +139,8 @@
 }
 
 .explore-btn {
+  height: auto;
+  width: auto;
   background-color: #d2d19e;
   border: none;
   padding: 12px 30px;

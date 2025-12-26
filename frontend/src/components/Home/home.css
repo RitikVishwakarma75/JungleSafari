@@ -1,29 +1,34 @@
-/* Home Styles */
-.body {
+/* ===================== */
+/* GLOBAL */
+/* ===================== */
+body {
   font-family: sans-serif;
   margin: 0;
   padding: 0;
-  position: relative;
   scroll-behavior: smooth;
 }
 
+/* ===================== */
+/* HERO SECTION */
+/* ===================== */
 .hero {
-  top: 4.5rem;
   width: 100%;
-  height: 800px; /* Or consider using height: 90vh; for viewport height */
+  min-height: 90vh; /* Responsive height */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: rgb(255, 255, 255);
+  color: #ffffff;
   text-align: center;
   font-weight: bold;
-  position: relative; 
-  padding: 0 1rem; /* Add padding to prevent text from touching edges */
-  box-sizing: border-box; /* Ensures padding is included in the element's width/height */
-  scroll-behavior: smooth;
+  position: relative;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
 
+/* ===================== */
+/* TEXT */
+/* ===================== */
 .hero h1 {
   font-size: 4rem;
   margin-bottom: 20px;
@@ -31,19 +36,25 @@
 
 .hero p {
   font-size: 1.2rem;
-  max-width: 600px; /* Good for readability on large screens */
+  max-width: 600px;
   line-height: 1.6;
 }
 
+/* ===================== */
+/* BUTTON */
+/* ===================== */
 .heroBtn {
-  padding: 12px 24px;
-  font-size: 1.3rem;
+  width: auto;
+  height: auto;
+  padding: 12px 28px;
+  font-size: 1.2rem;
   cursor: pointer;
   background: transparent;
   color: white;
   border: 2px solid white;
-  margin-top: 1.5rem;
+  margin-top: 1.8rem;
   transition: all 0.3s ease;
+  border-radius: 6px;
 }
 
 .heroBtn:hover {
@@ -51,27 +62,46 @@
   color: #333;
 }
 
-
-/* --- 👇 Add This For Responsiveness --- */
-
-/* For tablets and smaller devices (screen width 768px or less) */
+/* ===================== */
+/* TABLET */
+/* ===================== */
 @media (max-width: 768px) {
   .hero {
-    height: 70vh; /* Adjust height based on viewport */
+    min-height: 80vh;
+    padding: 0 1.2rem;
   }
-  
+
   .hero h1 {
-    font-size: 2.5rem; /* Make heading smaller */
+    font-size: 2.6rem;
   }
 
   .hero p {
-    font-size: 1rem; /* Make paragraph text smaller */
+    font-size: 1rem;
+  }
+
+  .heroBtn {
+    font-size: 1.1rem;
   }
 }
 
-/* For mobile phones (screen width 480px or less) */
+/* ===================== */
+/* MOBILE */
+/* ===================== */
 @media (max-width: 480px) {
+  .hero {
+    min-height: 75vh;
+  }
+
   .hero h1 {
-    font-size: 2rem; /* Make heading even smaller for phones */
+    font-size: 2rem;
+  }
+
+  .hero p {
+    font-size: 0.95rem;
+  }
+
+  .heroBtn {
+    font-size: 1rem;
+    padding: 10px 22px;
   }
 }

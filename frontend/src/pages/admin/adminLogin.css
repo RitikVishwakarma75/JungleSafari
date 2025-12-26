@@ -29,3 +29,34 @@ button {
   color: red;
   margin-bottom: 10px;
 }
+.admin-actions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.admin-actions p {
+  margin: 10px 0;
+  font-size: 0.9rem;
+}
+
+.reset-link,
+.signup-link {
+  color: #667d67;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.reset-link:hover,
+.signup-link:hover {
+  text-decoration: underline;
+}
+
+.signin-text {
+  color: #555;
+  font-size: 0.85rem;
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

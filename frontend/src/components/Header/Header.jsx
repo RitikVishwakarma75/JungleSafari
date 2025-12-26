@@ -4,33 +4,29 @@ import { Link, NavLink } from "react-router-dom";
 import "./Header.css";
 
 export default function Header() {
-  // State to manage the mobile menu's visibility
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Function to close the menu when a link is clicked
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
 
   return (
     <header className="header">
-      {/* Logo is now a link to the homepage */}
+      {/* Logo */}
       <Link to="/" className="logo" onClick={closeMenu}>
         <h1>Corbett Trails</h1>
       </Link>
 
-      {/* Hamburger Button (visible only on mobile) */}
+      {/* Hamburger */}
       <button className="hamburger" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-        {/* The three bars of the icon */}
         <span className="bar"></span>
         <span className="bar"></span>
         <span className="bar"></span>
       </button>
 
-      {/* Navigation container - gets 'active' class when menu is open */}
+      {/* Nav */}
       <div className={`nav-container ${isMenuOpen ? "active" : ""}`}>
         <nav>
-          {/* Using NavLink to style the active page link */}
           <NavLink to="/" onClick={closeMenu}>
             Home
           </NavLink>
@@ -46,12 +42,30 @@ export default function Header() {
           <NavLink to="/reviews" onClick={closeMenu}>
             Reviews
           </NavLink>
+
+          {/* Admin (mobile) */}
+          <NavLink
+            to="/admin/login"
+            className="admin-mobile"
+            onClick={closeMenu}
+          >
+            Admin Login
+          </NavLink>
         </nav>
       </div>
-      {/* Contact button is now a Link for better navigation */}
-      <Link to="/contact" className="headerBtn" onClick={closeMenu}>
-        Contact us
-      </Link>
+
+      {/* Right side buttons */}
+      <div className="header-actions">
+        {/* ✅ Direct Admin Login */}
+        <Link to="/admin/login" className="admin-btn" onClick={closeMenu}>
+          Admin
+        </Link>
+
+        {/* Contact */}
+        <Link to="/contact" className="headerBtn" onClick={closeMenu}>
+          Contact us
+        </Link>
+      </div>
     </header>
   );
 }

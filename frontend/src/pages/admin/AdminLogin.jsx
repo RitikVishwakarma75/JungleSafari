@@ -1,8 +1,7 @@
 // frontend/src/pages/admin/AdminLogin.jsx
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./adminLogin.css";
-
 
 export default function AdminLogin() {
   const navigate = useNavigate();
@@ -11,6 +10,7 @@ export default function AdminLogin() {
     password: "",
   });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,6 +19,7 @@ export default function AdminLogin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
       const res = await fetch("http://localhost:5000/api/admin/login", {
@@ -31,15 +32,18 @@ export default function AdminLogin() {
 
       if (!res.ok) {
         setError(data.message || "Login failed");
+        setLoading(false);
         return;
       }
 
-      // save token
+      // Save token
       localStorage.setItem("adminToken", data.token);
 
       navigate("/admin/dashboard");
     } catch (err) {
       setError("Server error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,10 +70,31 @@ export default function AdminLogin() {
           required
         />
 
+        {/* Error */}
         {error && <p className="error">{error}</p>}
 
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
+
+      {/* Extra actions */}
+      <div className="admin-actions">
+        <Link to="/admin/reset-password" className="reset-link">
+          Forgot Password?
+        </Link>
+
+        <p>
+          Don’t have an account?{" "}
+          <Link to="/admin/signup" className="signup-link">
+            Sign Up
+          </Link>
+        </p>
+
+        <p className="signin-text">
+          Already have an account? <strong>Sign in above</strong>
+        </p>
+      </div>
     </div>
   );
 }

@@ -1,16 +1,20 @@
-/* General Body Styles */
+/* ===================== */
+/* BODY */
+/* ===================== */
 body {
   font-family: sans-serif;
   margin: 0;
   padding: 0;
-  /* Add space at the top so content isn't hidden by the fixed header */
-  padding-top: 80px; 
+  padding-top: 80px;
 }
 
-/* Header Container */
+/* ===================== */
+/* HEADER */
+/* ===================== */
 .header {
+  
   display: flex;
-  justify-content: space-between; /* Pushes logo and button to the edges */
+  justify-content: space-between;
   align-items: center;
   background: #ffffff;
   color: #000;
@@ -18,29 +22,36 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 15px 30px;
+  padding: 15px 15px;
+  
   box-sizing: border-box;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Logo Styling */
+/* ===================== */
+/* LOGO */
+/* ===================== */
 .logo h1 {
   margin: 0;
   font-size: 1.8rem;
   white-space: nowrap;
-  border: 1px solid rgb(177, 168, 168); /* Prevents logo text from wrapping */
+  border: 1px solid rgb(177, 168, 168);
 }
-.logo, .logo:visited {
+
+.logo,
+.logo:visited {
   color: #000;
   text-decoration: none;
 }
 
-/* Navigation Links Container */
+/* ===================== */
+/* NAV */
+/* ===================== */
 .nav-container {
-  flex-grow: 1; /* Makes the container expand to fill empty space */
+  flex-grow: 1;
   display: flex;
-  justify-content: center; /* Centers the <nav> element inside */
+  justify-content: center;
 }
 
 nav a {
@@ -50,111 +61,147 @@ nav a {
   color: #333;
   padding-bottom: 5px;
   border-bottom: 2px solid transparent;
-  transition: color 0.3s, border-color 0.3s;
-  white-space: nowrap;
+  transition: 0.3s;
 }
 
-/* Style for the currently active page link */
 nav a:hover,
-nav a.active { 
+nav a.active {
   color: #667d67;
   border-bottom-color: #667d67;
 }
 
-/* Contact Button */
+/* ===================== */
+/* RIGHT SIDE */
+/* ===================== */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ===================== */
+/* CONTACT */
+/* ===================== */
 .headerBtn {
   background-color: #667d67;
   color: #ffffff;
-  border: none;
   padding: 12px 28px;
-  text-align: center;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
   border-radius: 8px;
-  transition: background-color 0.3s;
-  white-space: nowrap;
+  font-weight: 600;
+  text-decoration: none;
 }
 
 .headerBtn:hover {
   background-color: #506651;
 }
 
-/* Hamburger Menu Icon (hidden on desktop) */
+/* ===================== */
+/* ADMIN DESKTOP */
+/* ===================== */
+.admin-wrapper {
+  position: relative;
+  width: auto;
+}
+
+.admin-btn {
+  background: #0f172a;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  width: auto;
+}
+
+.admin-dropdown {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  border-radius: 8px;
+  overflow: hidden;
+  min-width: 140px;
+  z-index: 2000;
+}
+
+.admin-dropdown a {
+  display: block;
+  padding: 12px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.admin-dropdown a:hover {
+  background: #f4f4f4;
+}
+
+/* ===================== */
+/* HAMBURGER */
+/* ===================== */
 .hamburger {
+  width: auto;
   display: none;
   flex-direction: column;
-  gap: 5px;
+    gap: 5px;
   cursor: pointer;
   background: transparent;
   border: none;
-  z-index: 1001; /* Ensures it's above other elements */
-}
-.hamburger .bar {
-  display: block;
-  width: 25px;
-  height: 3px;
-  background-color: #333;
-  border-radius: 3px;
+
+  /* ✅ THIS FIXES THE POSITION */
 }
 
-/* ======================================= */
-/* --- RESPONSIVE STYLES FOR MOBILE --- */
-/* ======================================= */
+.hamburger .bar {
+  width: 25px;
+  height: 3px;
+ 
+  background-color: #333;
+}
+
+/* ===================== */
+/* MOBILE */
+/* ===================== */
+.admin-mobile {
+  display: none;
+}
+
 @media (max-width: 992px) {
-  
-  /* Show the hamburger icon on mobile */
   .hamburger {
     display: flex;
   }
 
-  /* Hide the nav links and contact button by default on mobile */
-  .nav-container, .headerBtn {
+  .nav-container,
+  .header-actions {
     display: none;
   }
 
-  /* When the menu is open, show the nav container */
   .nav-container.active {
     display: flex;
     flex-direction: column;
-    align-items: center;
     position: absolute;
-    top: 79px; /* Position below the header */
+    top: 79px;
     left: 0;
     width: 100%;
-    background-color: white;
-    padding-top: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
   }
 
-  /* When menu is active, place the button inside it */
-  .nav-container.active + .headerBtn {
-    display: block; /* Make the button visible */
-    position: absolute;
-    top: 360px; /* Position below nav links (adjust as needed) */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20%;
-    z-index: 1000;
-  }
-
-  /* Style nav and links for vertical layout */
-  .nav-container.active nav {
+  nav {
     width: 100%;
   }
 
-  .nav-container.active nav a {
+  nav a {
     display: block;
-    margin: 0;
     padding: 15px 0;
-    width: 100%;
     text-align: center;
     border-bottom: 1px solid #f0f0f0;
   }
 
-  /* Remove hover border in mobile menu */
-  .nav-container.active nav a:hover {
-    border-bottom-color: #f0f0f0;
+  /* Admin links inside mobile menu */
+  .admin-mobile {
+    display: block;
+    font-weight: 600;
+    color: #333;
   }
 }
