@@ -1,64 +1,85 @@
-import React, { useState } from "react";
-import Team from "../../pages/team";
-import { useNavigate } from "react-router-dom";
-
-import "./Footer.css"; // Make sure this path is correct for your CSS file
+import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import "./Footer.css";
 
 const Footer = () => {
   const [email, setEmail] = useState("");
   const [subscribe, setSubscribe] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const footerRef = useRef(null);
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
+  // ✅ Scroll animation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("footer-visible");
+        }
+      },
+      { threshold: 0.2 }
+    );
 
-  const handleSubscribeChange = (e) => {
-    setSubscribe(e.target.checked);
-  };
+    if (footerRef.current) observer.observe(footerRef.current);
+  }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Here you would typically send the email and subscribe status to your backend
-    console.log("Newsletter Signup Data:", { email, subscribe });
-    alert(`Thank you for subscribing, ${email}!`);
-    setEmail(""); // Clear email field after submission
-    setSubscribe(false); // Reset checkbox
-  };
+ const handleSubmit = async (e) => {
+   e.preventDefault();
+
+   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+   if (!emailRegex.test(email)) {
+     setEmailError(true);
+     setTimeout(() => setEmailError(false), 600);
+     return;
+   }
+
+   try {
+     const res = await fetch("http://localhost:5000/api/newsletter", {
+       method: "POST",
+       headers: { "Content-Type": "application/json" },
+       body: JSON.stringify({ email }),
+     });
+
+     const data = await res.json();
+
+     if (!res.ok) {
+       alert(data.message || "Subscription failed ❌");
+       return;
+     }
+
+     alert(data.message || "Subscribed successfully 🌿");
+     setEmail("");
+     setSubscribe(false);
+   } catch (error) {
+     alert("Server not responding. Try again later 🚫");
+   }
+ };
+
 
   return (
-    <footer className="footer-container">
+    <footer ref={footerRef} className="footer-container footer-hidden">
       <div className="footer-left">
         <h2 className="footer-logo">Corbett Trails</h2>
 
         <form className="newsletter-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="newsletterEmail" className="sr-only">
-              Email *
-            </label>{" "}
-            {/* sr-only for accessibility */}
-            <input
-              type="email"
-              id="newsletterEmail"
-              name="newsletterEmail"
-              placeholder="Email *"
-              value={email}
-              onChange={handleEmailChange}
-              required
-            />
-          </div>
-          <div className="form-group checkbox-group">
+          <input
+            type="email"
+            placeholder="Email *"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={emailError ? "email-error" : email ? "email-valid" : ""}
+          />
+
+          <div className="checkbox-group">
             <input
               type="checkbox"
-              id="subscribe"
-              name="subscribe"
               checked={subscribe}
-              onChange={handleSubscribeChange}
-              required // If subscription is mandatory
+              onChange={(e) => setSubscribe(e.target.checked)}
+              required
             />
-            <label htmlFor="subscribe">
-              Yes, subscribe me to your newsletter. *
-            </label>
+            <label>Yes, subscribe me *</label>
           </div>
+
           <button type="submit" className="submit-newsletter-btn">
             Submit
           </button>
@@ -67,31 +88,19 @@ const Footer = () => {
 
       <div className="footer-right">
         <div className="contact-info">
-          <p>+91 9756879998</p>
-          <p>thecorbettnaturelist@gmail.com</p>
-          <p>
-            Gaujani, Ramnagar, Nainital, Near Government School,
-            <br />
-            Uttarakhand, India 244715
-          </p>
+          <p>📞 +91 9756879998</p>
+          <p>📧 thecorbettnaturelist@gmail.com</p>
+          <p>Ramnagar, Uttarakhand, India</p>
         </div>
 
         <div className="legal-info">
-          <p>
-            <a href="/privacy-policy">Privacy Policy</a>
-          </p>
-          <p>
-            <a href="/team" onClick={() => navigate("/team")}>Teams</a>
-          </p>
+          <Link to="/privacy-policy">Privacy Policy</Link>
+          <Link to="/team">Team</Link>
         </div>
 
-        <div className="copyright-info">
-          <p>
-            &copy; Copyright © 2025 Wild Destination.
-            <br />
-            All rights reserved.{" "}
-          </p>
-        </div>
+        <p className="copyright">
+          © 2025 Wild Destination. All rights reserved.
+        </p>
       </div>
     </footer>
   );

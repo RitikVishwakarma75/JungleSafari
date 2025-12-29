@@ -2,6 +2,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminForgotPassword from "./pages/admin/AdminForgotPassword";
+import AdminResetPassword from "./pages/admin/AdminResetPassword";
+
 import Header from "./components/Header/Header";
 import Home from "./components/Home/Home";
 import About from "./pages/About";
@@ -21,10 +24,21 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
+
+        {/* ✅ ADMIN AUTH */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/about" element={<About />} />
+        <Route
+          path="/admin/forgot-password"
+          element={<AdminForgotPassword />}
+        />
+        <Route
+          path="/admin/reset-password/:token"
+          element={<AdminResetPassword />}
+        />
 
+        {/* EXISTING ROUTES */}
+        <Route path="/about" element={<About />} />
         <Route path="/locations" element={<Locations />} />
         <Route path="/booking" element={<Booking />} />
         <Route path="/team" element={<Team />} />

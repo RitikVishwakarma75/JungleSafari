@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import "./adminDashboard.css";
 import BookingsGraph from "./BookingsGraph";
 
-
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // 🔒 Protect dashboard
   useEffect(() => {
     const token = localStorage.getItem("adminToken");
 
@@ -25,9 +25,7 @@ export default function AdminDashboard() {
       },
     })
       .then((res) => {
-        if (!res.ok) {
-          throw new Error("Unauthorized");
-        }
+        if (!res.ok) throw new Error("Unauthorized");
         return res.json();
       })
       .then((data) => {
@@ -40,19 +38,19 @@ export default function AdminDashboard() {
       });
   }, [navigate]);
 
+  // 🚪 Logout (ONLY exit)
   const logout = () => {
     localStorage.removeItem("adminToken");
-    navigate("/admin/login");
+    window.location.href = "/";
   };
 
   return (
     <div className="admin-dashboard">
-      {/* Header */}
       <header className="dashboard-header">
         <div>
           <h1>Admin Dashboard</h1>
           <p className="subtitle">Manage safari bookings</p>
-          {/* Stats */}
+
           <section className="stats">
             <div className="stat-card">
               <span>Total Bookings</span>
@@ -70,12 +68,10 @@ export default function AdminDashboard() {
             Logout
           </button>
 
-          {/* 👇 GRAPH BELOW LOGOUT */}
           <BookingsGraph count={bookings.length} />
         </div>
       </header>
 
-      {/* Content */}
       {loading && <div className="loader"></div>}
       {error && <p className="error">{error}</p>}
 

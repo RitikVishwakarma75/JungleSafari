@@ -1,21 +1,16 @@
-// frontend/src/pages/admin/AdminLogin.jsx
-import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import "./adminLogin.css";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "./adminSignup.css";
 
-export default function AdminLogin() {
+export default function AdminSignup() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    inviteCode: "",
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
-  // 🔒 Block login page if already logged in
-  useEffect(() => {
-    const token = localStorage.getItem("adminToken");
-    if (token) {
-      navigate("/admin/dashboard");
-    }
-  }, [navigate]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -27,7 +22,7 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/admin/login", {
+      const res = await fetch("http://localhost:5000/api/admin/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -36,25 +31,23 @@ export default function AdminLogin() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || "Login failed");
+        setError(data.message || "Signup failed");
         setLoading(false);
         return;
       }
 
-      // ✅ Save token (persistent login)
-      localStorage.setItem("adminToken", data.token);
-
-      // 🔥 Force reload so Header updates instantly
-      window.location.href = "/admin/dashboard";
+      alert("Admin account created successfully!");
+      navigate("/admin/login");
     } catch (err) {
       setError("Server error");
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="admin-login">
-      <h2>Admin Login</h2>
+    <div className="admin-signup">
+      <h2>Restricted Admin Signup</h2>
 
       <form onSubmit={handleSubmit}>
         <input
@@ -75,16 +68,25 @@ export default function AdminLogin() {
           required
         />
 
+        <input
+          type="text"
+          name="inviteCode"
+          placeholder="Invite Code"
+          value={form.inviteCode}
+          onChange={handleChange}
+          required
+        />
+
         {error && <p className="error">{error}</p>}
 
         <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
+          {loading ? "Creating..." : "Create Admin"}
         </button>
       </form>
 
-      <div className="admin-actions">
-        <Link to="/admin/forgot-password">Forgot Password?</Link>
-      </div>
+      <p>
+        Already have an account? <Link to="/admin/login">Login</Link>
+      </p>
     </div>
   );
 }

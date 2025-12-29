@@ -29,6 +29,11 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 32px;
+
+  position: sticky;
+  top: 0;
+  background: #f8fafc;
+  z-index: 10;
 }
 
 .dashboard-header h1 {
@@ -43,15 +48,17 @@
   margin-top: 6px;
 }
 
-/* Logout Button */
+/* =====================
+   LOGOUT BUTTON
+===================== */
 .logout-btn {
   background: linear-gradient(135deg, #ef4444, #fb7185);
   color: white;
+  width: auto;
   border: none;
   padding: 10px 14px;
   margin-top: 10px;
   margin-right: 10px;
-  width: auto;
   border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
@@ -85,7 +92,6 @@
   overflow: hidden;
 }
 
-/* Glow line */
 .stat-card::after {
   content: "";
   position: absolute;
@@ -105,7 +111,6 @@
   font-weight: 700;
 }
 
-
 /* =====================
    TABLE CARD
 ===================== */
@@ -118,10 +123,11 @@
   animation: fadeUp 0.7s ease;
 }
 
+/* TABLE */
 table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed; /* ✅ keeps columns aligned */
+  table-layout: auto; /* ✅ IMPORTANT FIX */
 }
 
 thead {
@@ -129,21 +135,33 @@ thead {
 }
 
 th {
-  text-align: center;        /* ✅ center header text */
   padding: 16px;
   font-size: 13px;
   color: #475569;
   font-weight: 600;
-  vertical-align: middle;    /* ✅ vertical center */
+  text-align: center;
+  vertical-align: middle;
 }
 
 td {
   padding: 16px;
   border-top: 1px solid #e5e7eb;
   font-size: 14px;
-  text-align: center;        /* ✅ center data */
-  vertical-align: middle;    /* ✅ vertical center */
-  white-space: nowrap;       /* ✅ prevents text jump */
+  text-align: center;
+  vertical-align: middle;
+
+  /* ✅ OVERFLOW FIX */
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* Limit width of long text columns */
+td:nth-child(2), /* Email */
+td:nth-child(3) { /* Zone */
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Row animation */
@@ -159,7 +177,6 @@ tbody tr:hover {
     transparent
   );
 }
-
 
 /* =====================
    TAG / BADGE
@@ -254,10 +271,89 @@ tbody tr:hover {
   }
 }
 
+/* =====================
+   RESPONSIVE
+===================== */
 
-.dashboard-header {
-  position: sticky;
-  top: 0;
-  background: #f8fafc;
-  z-index: 10;
+/* Tablets */
+@media (max-width: 1024px) {
+  .admin-dashboard {
+    padding: 28px 20px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .right-panel {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .mini-graph {
+    width: 100%;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .admin-dashboard {
+    margin-top: 64px;
+    padding: 20px 14px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 22px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .right-panel {
+    align-items: stretch;
+  }
+
+  .logout-btn {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  table {
+    min-width: 720px; /* forces scroll instead of overlap */
+  }
+
+  th,
+  td {
+    font-size: 13px;
+    padding: 12px;
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .admin-dashboard {
+    padding: 16px 12px;
+  }
+
+  .dashboard-header h1 {
+    font-size: 20px;
+  }
+
+  .stat-card h2 {
+    font-size: 24px;
+  }
+
+  .mini-graph {
+    padding: 10px;
+  }
 }

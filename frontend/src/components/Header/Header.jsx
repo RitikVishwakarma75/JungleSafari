@@ -1,14 +1,25 @@
-// frontend/src/components/Header/Header.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import "./Header.css";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
+  const closeMenu = () => setIsMenuOpen(false);
+
+  // 🔁 Sync with admin login/logout
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("adminToken");
+      setIsAdminLoggedIn(!!token);
+    };
+
+    checkAuth();
+    window.addEventListener("storage", checkAuth);
+
+    return () => window.removeEventListener("storage", checkAuth);
+  }, []);
 
   return (
     <header className="header">
@@ -43,25 +54,27 @@ export default function Header() {
             Reviews
           </NavLink>
 
-          {/* Admin (mobile) */}
+          {/* ✅ MOBILE ADMIN BUTTON (ALWAYS VISIBLE) */}
           <NavLink
-            to="/admin/login"
+            to={isAdminLoggedIn ? "/admin/dashboard" : "/admin/login"}
             className="admin-mobile"
             onClick={closeMenu}
           >
-            Admin Login
+            {isAdminLoggedIn ? "Dashboard" : "Admin"}
           </NavLink>
         </nav>
       </div>
 
-      {/* Right side buttons */}
+      {/* Desktop right buttons */}
       <div className="header-actions">
-        {/* ✅ Direct Admin Login */}
-        <Link to="/admin/login" className="admin-btn" onClick={closeMenu}>
-          Admin
+        <Link
+          to={isAdminLoggedIn ? "/admin/dashboard" : "/admin/login"}
+          className="admin-btn"
+          onClick={closeMenu}
+        >
+          {isAdminLoggedIn ? "Dashboard" : "Admin"}
         </Link>
 
-        {/* Contact */}
         <Link to="/contact" className="headerBtn" onClick={closeMenu}>
           Contact us
         </Link>

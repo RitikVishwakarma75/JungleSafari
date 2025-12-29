@@ -12,7 +12,6 @@ body {
 /* HEADER */
 /* ===================== */
 .header {
-  
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -22,8 +21,7 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 15px 15px;
-  
+  padding: 15px;
   box-sizing: border-box;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -80,7 +78,7 @@ nav a.active {
 }
 
 /* ===================== */
-/* CONTACT */
+/* CONTACT BUTTON */
 /* ===================== */
 .headerBtn {
   background-color: #667d67;
@@ -98,11 +96,6 @@ nav a.active {
 /* ===================== */
 /* ADMIN DESKTOP */
 /* ===================== */
-.admin-wrapper {
-  position: relative;
-  width: auto;
-}
-
 .admin-btn {
   background: #0f172a;
   color: #fff;
@@ -111,62 +104,37 @@ nav a.active {
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  width: auto;
-}
-
-.admin-dropdown {
-  position: absolute;
-  top: 45px;
-  right: 0;
-  background: #fff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  border-radius: 8px;
-  overflow: hidden;
-  min-width: 140px;
-  z-index: 2000;
-}
-
-.admin-dropdown a {
-  display: block;
-  padding: 12px;
-  text-decoration: none;
-  color: #333;
-  font-weight: 500;
-}
-
-.admin-dropdown a:hover {
-  background: #f4f4f4;
 }
 
 /* ===================== */
 /* HAMBURGER */
 /* ===================== */
 .hamburger {
-  width: auto;
   display: none;
   flex-direction: column;
-    gap: 5px;
+  gap: 5px;
   cursor: pointer;
   background: transparent;
   border: none;
-
-  /* ✅ THIS FIXES THE POSITION */
 }
 
 .hamburger .bar {
   width: 25px;
   height: 3px;
- 
   background-color: #333;
 }
 
 /* ===================== */
-/* MOBILE */
+/* MOBILE ADMIN LINK */
 /* ===================== */
 .admin-mobile {
   display: none;
+  font-weight: 600;
 }
 
+/* ===================== */
+/* MOBILE VIEW */
+/* ===================== */
 @media (max-width: 992px) {
   .hamburger {
     display: flex;
@@ -198,10 +166,9 @@ nav a.active {
     border-bottom: 1px solid #f0f0f0;
   }
 
-  /* Admin links inside mobile menu */
+  /* ✅ Show Admin/Dashboard inside mobile menu */
   .admin-mobile {
     display: block;
-    font-weight: 600;
-    color: #333;
+    text-align: center;
   }
 }
