@@ -75,7 +75,11 @@ export default function Header() {
           {isAdminLoggedIn ? "Dashboard" : "Admin"}
         </Link>
 
-        <Link to="/contact" className="headerBtn" onClick={closeMenu}>
+        <Link
+          to="/contact#contact-form"
+          className="headerBtn"
+          onClick={closeMenu}
+        >
           Contact us
         </Link>
       </div>

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "./Booking.css";
-
+import { useNavigate } from "react-router-dom";
 
 export default function Booking() {
+  const navigate = useNavigate();
+  
   // State for form fields
   const [form, setForm] = useState({
     fullName: "",
@@ -216,7 +218,12 @@ export default function Booking() {
           Adventure, serenity, and the roar of the jungle await. Step into Jim
           Corbett National Park today.
         </p>
-        <button className="cta-btn">Contact Our Team</button>
+        <button
+          className="cta-btn"
+          onClick={() => navigate("/#contact-form")}
+        >
+          Contact Our Team
+        </button>
       </div>
     </section>
   );

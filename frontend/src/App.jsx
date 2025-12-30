@@ -4,6 +4,8 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminForgotPassword from "./pages/admin/AdminForgotPassword";
 import AdminResetPassword from "./pages/admin/AdminResetPassword";
+import Contact from "./components/Contact/Contact";
+
 
 import Header from "./components/Header/Header";
 import Home from "./components/Home/Home";
@@ -44,7 +46,7 @@ export default function App() {
         <Route path="/team" element={<Team />} />
         <Route path="/reviews" element={<Reviews />} />
 
-        {/* <Route path="/contact" element={<Contact />} /> */}
+        <Route path="/contact" element={<Contact />} />
       </Routes>
     </BrowserRouter>
   );

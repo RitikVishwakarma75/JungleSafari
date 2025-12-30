@@ -1,6 +1,8 @@
 import "./about.css";
+import { useNavigate } from "react-router-dom";
 
 export default function About() {
+    const navigate = useNavigate(); 
   return (
     <section className="about-page">
       {/* HERO SECTION */}
@@ -80,7 +82,6 @@ export default function About() {
             </p>
           </div>
 
-         
           <div className="highlight-card">
             <img
               src="https://cdn-icons-png.flaticon.com/512/706/706195.png"
@@ -117,7 +118,9 @@ export default function About() {
           follow your instincts, and let Corbett Trails guide your next
           unforgettable journey.
         </p>
-        <button className="cta-btn">Plan Your Safari</button>
+        <button className="cta-btn" onClick={() => navigate("/booking")}>
+          Plan Your Safari
+        </button>
       </div>
     </section>
   );

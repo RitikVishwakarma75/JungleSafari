@@ -1,7 +1,25 @@
+// frontend/src/components/Contact/Contact.jsx
 import React, { useState } from "react";
 import "./Contact.css"; // Your existing CSS file
 import Footer from "../Footer/Footer";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 const Contact = () => {
+  const location = useLocation();
+useEffect(() => {
+  if (location.hash) {
+    setTimeout(() => {
+      const el = document.querySelector(location.hash);
+      if (el) {
+        const yOffset = -100; // header height
+        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    }, 0);
+  }
+}, [location]);
+
   // State to hold all form field values
   const [form, setForm] = useState({
     firstName: "",
@@ -53,7 +71,7 @@ const Contact = () => {
 
   return (
     <div className="contact-container">
-      <div className="contact-content">
+      <div className="contact-content" id="contact-form">
         <h1 className="contact-title">Contact Us</h1>
         <p className="contact-description">
           Feel free to reach out to us for any inquiries or to start crafting
