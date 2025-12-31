@@ -8,6 +8,7 @@ const { getAllBookings } = require("../controllers/adminController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
 const router = express.Router();
+const Booking = require("../models/booking");
 
 /* =======================
    ADMIN LOGIN
@@ -149,5 +150,46 @@ router.post("/reset-password/:token", async (req, res) => {
    GET ALL BOOKINGS
 ======================= */
 router.get("/bookings", authMiddleware, getAllBookings);
+
+// =======================
+// UPDATE BOOKING STATUS (Approve / Cancel / Complete)
+// =======================
+router.patch("/bookings/:id", authMiddleware, async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    // safety check
+    if (!["pending", "approved", "completed", "cancelled"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+
+    const booking = await Booking.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    res.json(booking);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// =======================
+// DELETE BOOKING (Admin Only)
+// =======================
+router.delete("/bookings/:id", authMiddleware, async (req, res) => {
+  try {
+    await Booking.findByIdAndDelete(req.params.id);
+    res.json({ message: "Booking deleted" });
+  } catch (err) {
+    res.status(500).json({ message: "Delete failed" });
+  }
+});
 
 module.exports = router;

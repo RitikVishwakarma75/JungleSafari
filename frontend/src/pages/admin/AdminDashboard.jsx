@@ -9,8 +9,9 @@ export default function AdminDashboard() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [filter, setFilter] = useState("all");
 
-  // 🔒 Protect dashboard
+  // 🔒 Protect dashboard + fetch bookings
   useEffect(() => {
     const token = localStorage.getItem("adminToken");
 
@@ -38,10 +39,76 @@ export default function AdminDashboard() {
       });
   }, [navigate]);
 
-  // 🚪 Logout (ONLY exit)
+  // 🔄 Update booking status
+  const updateStatus = async (id, status) => {
+    const token = localStorage.getItem("adminToken");
+
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/admin/bookings/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status }),
+        }
+      );
+
+      const updatedBooking = await res.json();
+
+      setBookings((prev) =>
+        prev.map((b) => (b._id === id ? updatedBooking : b))
+      );
+    } catch {
+      alert("Failed to update status");
+    }
+  };
+
+  // 🗑️ Delete booking
+  const deleteBooking = async (id) => {
+    const token = localStorage.getItem("adminToken");
+
+    if (!window.confirm("Delete this booking permanently?")) return;
+
+    try {
+      await fetch(`http://localhost:5000/api/admin/bookings/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setBookings((prev) => prev.filter((b) => b._id !== id));
+    } catch {
+      alert("Failed to delete booking");
+    }
+  };
+
+  // 🚪 Logout
   const logout = () => {
     localStorage.removeItem("adminToken");
     window.location.href = "/";
+  };
+
+  // 🔍 Filter logic
+  const filteredBookings =
+    filter === "all" ? bookings : bookings.filter((b) => b.status === filter);
+
+  // 📅 Today / Tomorrow logic
+  const getDayTag = (date) => {
+    const today = new Date();
+    const bookingDate = new Date(date);
+
+    today.setHours(0, 0, 0, 0);
+    bookingDate.setHours(0, 0, 0, 0);
+
+    const diff = bookingDate - today;
+
+    if (diff === 0) return "today";
+    if (diff === 86400000) return "tomorrow";
+    return null;
   };
 
   return (
@@ -61,25 +128,39 @@ export default function AdminDashboard() {
               <h2 className="active">Live</h2>
             </div>
           </section>
+
+          {/* 🔍 FILTER BAR */}
+          <div className="filter-bar">
+            {["all", "pending", "approved", "completed", "cancelled"].map(
+              (s) => (
+                <button
+                  key={s}
+                  className={filter === s ? "active-filter" : ""}
+                  onClick={() => setFilter(s)}
+                >
+                  {s}
+                </button>
+              )
+            )}
+          </div>
         </div>
 
         <div className="right-panel">
           <button className="logout-btn" onClick={logout}>
             Logout
           </button>
-
-          <BookingsGraph count={bookings.length} />
+          <BookingsGraph count={filteredBookings.length} />
         </div>
       </header>
 
       {loading && <div className="loader"></div>}
       {error && <p className="error">{error}</p>}
 
-      {!loading && bookings.length === 0 && (
+      {!loading && filteredBookings.length === 0 && (
         <p className="empty">No bookings available</p>
       )}
 
-      {bookings.length > 0 && (
+      {filteredBookings.length > 0 && (
         <div className="table-card">
           <table>
             <thead>
@@ -90,18 +171,78 @@ export default function AdminDashboard() {
                 <th>Date</th>
                 <th>Visitors</th>
                 <th>Safari</th>
+                <th>Status</th>
+                <th>Action</th>
               </tr>
             </thead>
+
             <tbody>
-              {bookings.map((b, i) => (
-                <tr key={b._id} style={{ animationDelay: `${i * 0.04}s` }}>
+              {filteredBookings.map((b, i) => (
+                <tr
+                  key={b._id}
+                  className={getDayTag(b.date)}
+                  style={{ animationDelay: `${i * 0.04}s` }}
+                >
                   <td>{b.fullName}</td>
                   <td>{b.email}</td>
                   <td>{b.zone}</td>
-                  <td>{new Date(b.date).toLocaleDateString()}</td>
+
+                  <td>
+                    {new Date(b.date).toLocaleDateString()}
+                    {getDayTag(b.date) && (
+                      <span className={`day-tag ${getDayTag(b.date)}`}>
+                        {getDayTag(b.date)}
+                      </span>
+                    )}
+                  </td>
+
                   <td>{b.visitors}</td>
                   <td>
                     <span className="tag">{b.safariType}</span>
+                  </td>
+
+                  <td>
+                    <span className={`status ${b.status}`}>{b.status}</span>
+                  </td>
+
+                  <td>
+                    {b.status === "pending" && (
+                      <>
+                        <button
+                          className="approve-btn"
+                          onClick={() => updateStatus(b._id, "approved")}
+                        >
+                          Approve
+                        </button>
+                        <button
+                          className="cancel-btn"
+                          onClick={() => updateStatus(b._id, "cancelled")}
+                        >
+                          Cancel
+                        </button>
+                      </>
+                    )}
+
+                    {b.status === "approved" && (
+                      <button
+                        className="complete-btn"
+                        onClick={() => updateStatus(b._id, "completed")}
+                      >
+                        Complete
+                      </button>
+                    )}
+
+                    {(b.status === "completed" || b.status === "cancelled") && (
+                      <>
+                        <span>{b.status === "completed" ? "✔" : "✖"}</span>
+                        <button
+                          className="delete-btn"
+                          onClick={() => deleteBooking(b._id)}
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}
