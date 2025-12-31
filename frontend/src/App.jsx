@@ -5,6 +5,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminForgotPassword from "./pages/admin/AdminForgotPassword";
 import AdminResetPassword from "./pages/admin/AdminResetPassword";
 import Contact from "./components/Contact/Contact";
+import ChatBot from "./components/ChatBot/ChatBot";
 
 
 import Header from "./components/Header/Header";
@@ -48,6 +49,7 @@ export default function App() {
 
         <Route path="/contact" element={<Contact />} />
       </Routes>
+      <ChatBot />
     </BrowserRouter>
   );
 }

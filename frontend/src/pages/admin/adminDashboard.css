@@ -24,6 +24,7 @@
    BASE
 ===================== */
 .admin-dashboard {
+ 
   max-width: 1200px;
   margin: 80px auto 0;
   padding: 32px;
@@ -31,6 +32,8 @@
   color: var(--text);
   font-family: "Inter", system-ui, sans-serif;
 }
+
+
 
 /* =====================
    HEADER
@@ -89,13 +92,15 @@
    FILTER BAR
 ===================== */
 .filter-bar {
+  width: auto;
   display: flex;
-  gap: 8px;
+  gap: 20px;
   margin-top: 16px;
   flex-wrap: wrap;
 }
 
 .filter-bar button {
+  width: auto;
   padding: 6px 12px;
   border-radius: 6px;
   border: 1px solid var(--border);
@@ -109,11 +114,11 @@
   background: #eef2ff;
 }
 
-.active-filter {
+/* .active-filter {
   background: var(--blue);
   color: white;
   border-color: var(--blue);
-}
+} */
 
 /* =====================
    RIGHT PANEL
@@ -162,7 +167,8 @@ table {
 }
 
 thead th {
-  text-align: left;
+  text-align: center;
+  
   font-size: 12px;
   font-weight: 600;
   color: var(--muted);
@@ -170,6 +176,7 @@ thead th {
 }
 
 tbody td {
+  text-align: center;
   padding: 14px 0;
   font-size: 14px;
   border-top: 1px solid var(--border);
@@ -178,6 +185,7 @@ tbody td {
 
 tbody tr {
   animation: fadeIn 0.35s ease forwards;
+  width: auto;
 }
 
 tbody tr:hover {

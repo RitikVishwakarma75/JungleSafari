@@ -114,7 +114,7 @@ export default function AdminDashboard() {
   return (
     <div className="admin-dashboard">
       <header className="dashboard-header">
-        <div>
+        <div className="left-panel">
           <h1>Admin Dashboard</h1>
           <p className="subtitle">Manage safari bookings</p>
 
