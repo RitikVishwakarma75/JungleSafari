@@ -1,6 +1,0 @@
-exclude:
-  - backend
-  - node_modules
-  - vendor
-  - package.json
-  - package-lock.json
