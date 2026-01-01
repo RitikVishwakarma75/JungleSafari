@@ -17,7 +17,7 @@ import Booking from "./pages/Booking";
 import Reviews from "./pages/Reviews";
 import Team from "./pages/Team";
 
-import "./app.css";
+import "./App.css";
 
 export default function App() {
   return (
