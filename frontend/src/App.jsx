@@ -15,7 +15,7 @@ import About from "./pages/About";
 import Locations from "./pages/Locations";
 import Booking from "./pages/Booking";
 import Reviews from "./pages/Reviews";
-import Team from "./pages/team";
+import Team from "./pages/Team";
 
 import "./app.css";
 
