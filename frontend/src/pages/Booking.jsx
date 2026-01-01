@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Booking.css";
+import "./booking.css";
 import { useNavigate } from "react-router-dom";
 
 export default function Booking() {

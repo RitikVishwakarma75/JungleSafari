@@ -1,6 +1,6 @@
 // Home.jsx
 import Explore from "../Explore/Explore";
-import "./Home.css";
+import "./home.css";
 import { useNavigate } from "react-router-dom"; // 1. Import useNavigate
 
 export default function Home() {
