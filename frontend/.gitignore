@@ -24,8 +24,5 @@ dist-ssr
 *.sw?
 
 # Node
-node_modules/
-.env
 
-# Build
-dist/
+.env
