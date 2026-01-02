@@ -21,6 +21,7 @@ app.use("/api/admin", adminRouter);
 app.use("/api", newsletterRoute);
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
+
 });
   
