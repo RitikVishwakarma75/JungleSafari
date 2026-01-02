@@ -1,3 +1,4 @@
+// backend/index.js
 require("dotenv").config();
 
 const express = require("express");
@@ -8,11 +9,20 @@ const userRouter = require("./routes/user");
 const rideRouter = require("./routes/ride");
 const adminRouter = require("./routes/admin");
 const newsletterRoute = require("./routes/newsletter");
+const autoCreateAdmin = require("./utils/autoCreateAdmin");
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-connectMongoDb();
+connectMongoDb().then(async () => {
+  await autoCreateAdmin(); // 🔥 ye hi OPTION A hai
+
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
+});
+
 applyCommonMiddleware(app);
 
 app.use("/api", userRouter);
