@@ -2,23 +2,29 @@ const bcrypt = require("bcryptjs");
 const Admin = require("../models/admin");
 
 async function autoCreateAdmin() {
-  const existing = await Admin.findOne({
-    email: process.env.ADMIN_EMAIL,
-  });
+  const email = process.env.ADMIN_EMAIL;
+  const password = process.env.ADMIN_PASSWORD;
 
-  if (existing) {
-    console.log("ℹ️ Admin already exists");
+  if (!email || !password) {
+    console.log("⚠️ ADMIN_EMAIL or ADMIN_PASSWORD missing");
     return;
   }
 
-  const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
+  const existingAdmin = await Admin.findOne({ email });
+
+  if (existingAdmin) {
+    console.log("ℹ️ Admin already exists:", email);
+    return;
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   await Admin.create({
-    email: process.env.ADMIN_EMAIL,
+    email,
     password: hashedPassword,
   });
 
-  console.log("✅ Admin auto-created");
+  console.log("✅ Admin auto-created:", email);
 }
 
 module.exports = autoCreateAdmin;
