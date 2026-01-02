@@ -1,3 +1,4 @@
+// frontend/src/pages/admin/AdminForgotPassword.jsx
 import { useState } from "react";
 import "./adminForgotPassword.css";
 

@@ -1,3 +1,4 @@
+// backend/routes/admin.js
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -6,6 +7,7 @@ const crypto = require("crypto");
 const Admin = require("../models/admin");
 const { getAllBookings } = require("../controllers/adminController");
 const authMiddleware = require("../middlewares/authMiddleware");
+
 
 const router = express.Router();
 const Booking = require("../models/booking");
@@ -100,9 +102,19 @@ router.post("/forgot-password", async (req, res) => {
     await admin.save();
 
     // 📧 Replace console.log with email service later
-    console.log(
-      `Reset link: http://localhost:5173/admin/reset-password/${rawToken}`
-    );
+    const resetUrl = `${process.env.FRONTEND_URL}/admin/reset-password/${rawToken}`;
+
+    await sendEmail({
+      to: admin.email,
+      subject: "Admin Password Reset",
+      html: `
+    <h2>Password Reset</h2>
+    <p>Click the link below to reset your password:</p>
+    <a href="${resetUrl}">${resetUrl}</a>
+    <p>This link expires in 15 minutes.</p>
+  `,
+    });
+
 
     res.json({
       message: "If this email exists, a reset link has been sent",
