@@ -78,48 +78,48 @@ router.post("/signup", async (req, res) => {
 router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
+    console.log("📧 Forgot password request for:", email);
 
     const admin = await Admin.findOne({ email });
 
-    // 🔐 Always return same response (no email leak)
     if (!admin) {
+      console.log("ℹ️ Admin not found, returning generic response");
       return res.json({
         message: "If this email exists, a reset link has been sent",
       });
     }
 
     const rawToken = crypto.randomBytes(32).toString("hex");
+    console.log("🔑 Raw token generated");
 
-    // 🔐 Hash token before saving
     const hashedToken = crypto
       .createHash("sha256")
       .update(rawToken)
       .digest("hex");
 
     admin.resetToken = hashedToken;
-    admin.resetTokenExpiry = Date.now() + 15 * 60 * 1000; // 15 min
-
+    admin.resetTokenExpiry = Date.now() + 15 * 60 * 1000;
     await admin.save();
 
-    // 📧 Replace console.log with email service later
-    const resetUrl = `${process.env.FRONTEND_URL}/admin/reset-password/${rawToken}`;
+    console.log("💾 Reset token saved in DB");
 
+    const resetUrl = `${process.env.FRONTEND_URL}/admin/reset-password/${rawToken}`;
+    console.log("🔗 Reset URL:", resetUrl);
+
+    console.log("📨 About to send email...");
     await sendEmail({
       to: admin.email,
       subject: "Admin Password Reset",
-      html: `
-    <h2>Password Reset</h2>
-    <p>Click the link below to reset your password:</p>
-    <a href="${resetUrl}">${resetUrl}</a>
-    <p>This link expires in 15 minutes.</p>
-  `,
+      html: `<a href="${resetUrl}">Reset Password</a>`,
     });
 
+    console.log("✅ Email sent successfully");
 
     res.json({
       message: "If this email exists, a reset link has been sent",
     });
-  } catch {
+  } catch (err) {
+    console.error("❌ FORGOT PASSWORD ERROR:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
