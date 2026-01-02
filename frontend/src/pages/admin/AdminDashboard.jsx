@@ -20,7 +20,7 @@ export default function AdminDashboard() {
       return;
     }
 
-    fetch("http://localhost:5000/api/admin/bookings", {
+    fetch("https://junglesafari-s1dr.onrender.com/api/admin/bookings", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -45,7 +45,7 @@ export default function AdminDashboard() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/admin/bookings/${id}`,
+        `https://junglesafari-s1dr.onrender.com/api/admin/bookings/${id}`,
         {
           method: "PATCH",
           headers: {
@@ -73,12 +73,15 @@ export default function AdminDashboard() {
     if (!window.confirm("Delete this booking permanently?")) return;
 
     try {
-      await fetch(`http://localhost:5000/api/admin/bookings/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await fetch(
+        `https://junglesafari-s1dr.onrender.com/api/admin/bookings/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setBookings((prev) => prev.filter((b) => b._id !== id));
     } catch {

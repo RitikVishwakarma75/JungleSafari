@@ -34,11 +34,14 @@ const Footer = () => {
    }
 
    try {
-     const res = await fetch("http://localhost:5000/api/newsletter", {
-       method: "POST",
-       headers: { "Content-Type": "application/json" },
-       body: JSON.stringify({ email }),
-     });
+     const res = await fetch(
+       "https://junglesafari-s1dr.onrender.com/api/newsletter",
+       {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify({ email }),
+       }
+     );
 
      const data = await res.json();
 

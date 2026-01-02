@@ -41,11 +41,14 @@ useEffect(() => {
     console.log("Submitting form with data:", form); // Good for debugging
 
     try {
-      const res = await fetch("http://localhost:5000/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+      const res = await fetch(
+        "https://junglesafari-s1dr.onrender.com/api/contact",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        }
+      );
 
       // Check if the request was successful
       if (res.ok) {

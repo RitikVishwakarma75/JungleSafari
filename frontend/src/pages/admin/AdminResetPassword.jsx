@@ -23,7 +23,7 @@ export default function AdminResetPassword() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/admin/reset-password/${token}`,
+        `https://junglesafari-s1dr.onrender.com/api/admin/reset-password/${token}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

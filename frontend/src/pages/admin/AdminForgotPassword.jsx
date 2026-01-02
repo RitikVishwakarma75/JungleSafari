@@ -12,11 +12,14 @@ export default function AdminForgotPassword() {
     setMessage("");
 
     try {
-      await fetch("http://localhost:5000/api/admin/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+      await fetch(
+        "https://junglesafari-s1dr.onrender.com/api/admin/forgot-password",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        }
+      );
 
       // ✅ ALWAYS SAME MESSAGE (SECURE)
       setMessage(

@@ -144,7 +144,7 @@ export default function ChatBot() {
   };
 
   const confirmBooking = async () => {
-    await fetch("http://localhost:5000/api/booking", {
+    await fetch("https://junglesafari-s1dr.onrender.com/api/booking", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...booking, source: "chatbot" }),

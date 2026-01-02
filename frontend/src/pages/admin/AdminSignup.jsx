@@ -22,11 +22,14 @@ export default function AdminSignup() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/admin/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+      const res = await fetch(
+        "https://junglesafari-s1dr.onrender.com/api/admin/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        }
+      );
 
       const data = await res.json();
 
