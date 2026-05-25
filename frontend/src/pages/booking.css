@@ -77,28 +77,47 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* ===== BOOKING FORM LAYOUT WRAPPER ===== */
+.booking-main-content {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .booking-main-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+
 /* ===== BOOKING FORM ===== */
 .booking-container {
-  padding: 4rem 2rem;
-  text-align: center;
+  padding: 0;
+  text-align: left;
+  width: 100%;
 }
 
 .booking-container h2,
 .booking-container p {
   color: #fff;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .booking-form {
-  max-width: 700px;
-  margin: 0 auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  background-color: #3b5a4d; /* form background */
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  background-color: #172b21; /* premium dark forest green form background */
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 .form-group {
@@ -108,40 +127,229 @@
 }
 
 .form-group label {
-  margin-bottom: 0.3rem;
-  font-weight: 500;
-  color: #fff; /* label white */
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #a5c3a5; /* label pastel green */
+  font-size: 0.9rem;
 }
 
 .form-group input,
 .form-group textarea,
 .form-group select {
   width: 100%;
-  padding: 0.8rem;
+  padding: 0.9rem;
   border-radius: 8px;
-  border: 1px solid #fff;
-  background-color: #3b5a4d;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  background-color: rgba(0, 0, 0, 0.25);
   color: #fff;
   outline: none;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  transition: all 0.2s;
 }
 
 .form-group input::placeholder,
 .form-group textarea::placeholder {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
-  border-color: #77ac96;
-  box-shadow: 0 0 8px rgba(119, 172, 150, 0.5);
+  border-color: #4caf50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
 }
 
 .form-group textarea {
   resize: vertical;
   min-height: 100px;
 }
+
+/* ===== 🔮 AI PREDICTOR WIDGET STYLES ===== */
+.booking-predictor-container {
+  width: 100%;
+  position: sticky;
+  top: 100px;
+}
+
+.predictor-card {
+  background: rgba(18, 30, 18, 0.85);
+  border: 1px solid rgba(76, 175, 80, 0.25);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  color: #fff;
+}
+
+.predictor-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.predictor-magic-icon {
+  color: #4caf50;
+  font-size: 1.4rem;
+  animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0px); }
+}
+
+.predictor-card-header h3 {
+  font-size: 1.25rem;
+  margin: 0;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+/* Empty State */
+.predictor-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #88a888;
+}
+
+.compass-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  opacity: 0.6;
+}
+
+.predictor-empty-state h4 {
+  color: #fff;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.predictor-empty-state p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Loading State */
+.predictor-loading-state {
+  text-align: center;
+  padding: 50px 20px;
+  color: #a5c3a5;
+}
+
+.spin-loading {
+  color: #4caf50;
+  animation: spin 1.2s linear infinite;
+  margin-bottom: 20px;
+}
+
+.predictor-loading-state h4 {
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.predictor-loading-state p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Results State */
+.prediction-summary-box {
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 25px;
+}
+
+.summary-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #81c784;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.prediction-summary-box p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #d1dcd1;
+  margin: 0;
+}
+
+.predictor-results h4 {
+  font-size: 1rem;
+  color: #81c784;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.prediction-rates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.rate-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rate-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.rate-animal {
+  color: #fff;
+}
+
+.rate-percent {
+  color: #81c784;
+}
+
+.rate-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.rate-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1s ease-out;
+}
+
+.rate-progress-fill.high { background: #4caf50; }
+.rate-progress-fill.medium { background: #ffa726; }
+.rate-progress-fill.low { background: #ef5350; }
+
+.prediction-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: #88a888;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.disclaimer-check {
+  color: #4caf50;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
 
 /* ===== BUTTONS ===== */
 .book-btn,
@@ -192,3 +400,582 @@
     width: 100%;
   }
 }
+
+/* ===== 🛞 INTERACTIVE JEEP SEAT SELECTOR ===== */
+.jeep-seat-selector-wrapper {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+.jeep-seat-selector-wrapper label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #81c784;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.seat-helper-text {
+  font-size: 0.82rem;
+  color: #a5c3a5;
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+/* Jeep Cabin visual outline */
+.jeep-cabin-grid {
+  background: #111e11;
+  border: 3px solid #88a888;
+  border-radius: 20px 20px 8px 8px;
+  max-width: 260px;
+  margin: 0 auto 20px auto;
+  padding: 30px 20px 20px 20px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+  position: relative;
+}
+
+/* Front hood visual outline */
+.jeep-cabin-grid::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 30px;
+  width: 194px;
+  height: 10px;
+  background: #557755;
+  border-radius: 6px 6px 0 0;
+  border: 1.5px solid #88a888;
+  border-bottom: none;
+}
+
+.cabin-row {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 18px;
+  gap: 15px;
+}
+
+.cabin-row.back-row {
+  margin-bottom: 0;
+  gap: 10px;
+}
+
+.seat {
+  width: 80px;
+  height: 52px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid rgba(76, 175, 80, 0.35);
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+.seat small {
+  font-size: 0.65rem;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.seat:hover {
+  transform: translateY(-2px);
+  border-color: #4caf50;
+  box-shadow: 0 4px 10px rgba(76,175,80,0.3);
+}
+
+.seat.selected {
+  background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
+  border-color: #81c784 !important;
+  box-shadow: 0 0 12px rgba(76,175,80,0.5);
+  transform: scale(1.05);
+}
+
+.seat.premium {
+  border-color: #ffa726;
+  background: rgba(255, 167, 38, 0.03);
+}
+
+.seat.premium:hover {
+  border-color: #ffb74d;
+  background: rgba(255, 167, 38, 0.08);
+}
+
+.seat.driver.disabled {
+  background: rgba(255,255,255,0.06);
+  border: 1px dashed rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.35);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Legend */
+.seats-legend {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  font-size: 0.78rem;
+  color: #a5c3a5;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-box {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.legend-box.available {
+  background: rgba(255,255,255,0.04);
+  border: 2px solid rgba(76, 175, 80, 0.35);
+}
+
+.legend-box.premium-box {
+  border: 2px solid #ffa726;
+  background: rgba(255, 167, 38, 0.03);
+}
+
+.legend-box.selected-box {
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  border: 1px solid #81c784;
+}
+
+/* ===== 💰 DYNAMIC PRICING BREAKDOWN ===== */
+.price-breakdown-card {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 15px;
+}
+
+.price-breakdown-card h4 {
+  font-size: 0.95rem;
+  color: #81c784;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.price-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #b9d3b9;
+  margin-bottom: 8px;
+}
+
+.price-line.total-price {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0;
+}
+
+.price-line.total-price span:last-child {
+  color: #81c784;
+}
+
+.price-divider {
+  border: none;
+  border-top: 1px solid rgba(76, 175, 80, 0.2);
+  margin: 10px 0;
+}
+
+.book-btn {
+  background: var(--primary-gradient, linear-gradient(135deg, #4caf50, #2e7d32));
+  color: #fff;
+  border: none;
+  padding: 14px 20px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.book-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(76, 175, 80, 0.35);
+  filter: brightness(1.1);
+}
+
+/* ===== ADVANCED FORM STYLING OVERRIDES ===== */
+.form-group input,
+.form-group textarea,
+.form-group select {
+  border: 1.5px solid rgba(255, 255, 255, 0.15) !important;
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: var(--primary-color, #4caf50) !important;
+  background-color: rgba(0, 0, 0, 0.55) !important;
+  box-shadow: 0 0 12px rgba(76, 175, 80, 0.25) !important;
+}
+
+/* Valid State */
+.input-valid {
+  border-color: #81c784 !important;
+  box-shadow: 0 0 8px rgba(129, 199, 130, 0.15) !important;
+}
+
+/* Invalid State */
+.input-invalid {
+  border-color: #ef5350 !important;
+  box-shadow: 0 0 8px rgba(239, 83, 80, 0.15) !important;
+}
+
+/* Validation Indicator Animation */
+.input-validation-status {
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  display: inline-block;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ===== 🎟️ TICKET MODAL OVERLAY & CARD STYLES ===== */
+.ticket-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.ticket-modal-card {
+  background: linear-gradient(145deg, #13251a, #0b150f);
+  border: 2px solid rgba(76, 175, 80, 0.4);
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  padding: 30px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+.ticket-modal-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.ticket-modal-header h2 {
+  color: #81c784;
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+}
+
+.ticket-modal-header p {
+  color: #a5c3a5;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Official Boarding Pass Ticket */
+.official-ticket-pass {
+  background: #ffffff;
+  color: #333333;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  border: 1.5px solid #2e7d32;
+  font-family: "Poppins", sans-serif;
+}
+
+.ticket-pass-header {
+  background: linear-gradient(135deg, #1b5e20, #2e7d32);
+  color: #ffffff;
+  padding: 20px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ticket-pass-logo h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  letter-spacing: 1.5px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.ticket-pass-logo span {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.85;
+}
+
+.ticket-pass-badge {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.ticket-pass-body {
+  padding: 25px;
+}
+
+.ticket-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.meta-col {
+  display: flex;
+  flex-direction: column;
+  width: 48%;
+}
+
+.meta-col small {
+  font-size: 0.65rem;
+  color: #666666;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.meta-col strong {
+  font-size: 0.95rem;
+  color: #222222;
+  font-weight: 700;
+}
+
+.meta-col strong.status-approved {
+  color: #2e7d32;
+}
+
+.meta-col strong.price-bold {
+  color: #2e7d32;
+  font-size: 1.05rem;
+}
+
+/* Circular cuts coupon design */
+.ticket-pass-divider {
+  position: relative;
+  margin: 25px 0;
+}
+
+.divider-circle {
+  position: absolute;
+  top: -10px;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(145deg, #13251a, #0b150f); /* matches the modal body */
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.divider-circle.left {
+  left: -36px;
+  border-right: 1.5px solid #2e7d32;
+}
+
+.divider-circle.right {
+  right: -36px;
+  border-left: 1.5px solid #2e7d32;
+}
+
+.divider-line {
+  border-top: 2px dashed #2e7d32;
+  opacity: 0.5;
+  height: 1px;
+}
+
+/* Footer Section */
+.ticket-pass-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.qr-pass-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.qr-pass-img {
+  width: 120px;
+  height: 120px;
+  border: 2px solid #eeeeee;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+.qr-pass-container small {
+  font-size: 0.6rem;
+  color: #666666;
+  text-transform: uppercase;
+}
+
+.guidelines-pass-container {
+  flex-grow: 1;
+}
+
+.guidelines-pass-container h4 {
+  margin: 0 0 6px 0;
+  font-size: 0.8rem;
+  color: #1b5e20;
+  text-transform: uppercase;
+}
+
+.guidelines-pass-container ul {
+  margin: 0;
+  padding-left: 14px;
+  font-size: 0.72rem;
+  color: #555555;
+  line-height: 1.4;
+}
+
+.guidelines-pass-container li {
+  margin-bottom: 4px;
+}
+
+/* Actions panel styling */
+.ticket-modal-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.btn-action {
+  flex: 1;
+  padding: 12px 18px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-action.print-btn {
+  background: linear-gradient(135deg, #81c784, #4caf50);
+  color: #ffffff;
+}
+
+.btn-action.print-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.btn-action.close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #a5c3a5;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.btn-action.close-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ===== 🖨️ HIGH-FIDELITY PRINT-SPECIFIC CSS MEDIA STYLES ===== */
+@media print {
+  /* Hide specific sibling layout wrapper elements, keeping root and booking-page visible */
+  header, footer, nav, .booking-hero, .booking-intro, .booking-cta, .booking-main-content, .stripe-backdrop, .no-print {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Reset body and layout backgrounds */
+  body, html, #root, .booking-page {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: auto !important;
+    box-shadow: none !important;
+  }
+
+  /* Style overlay to take up standard document flow for printing */
+  .ticket-modal-overlay {
+    position: relative !important;
+    inset: auto !important;
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    backdrop-filter: none !important;
+    z-index: auto !important;
+  }
+
+  .ticket-modal-card {
+    border: none !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .official-ticket-pass {
+    border: 2px dashed #1b5e20 !important;
+    width: 100% !important;
+    max-width: 600px !important;
+    margin: 20px auto !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    background: #ffffff !important;
+    color: #333333 !important;
+  }
+
+  /* Ensure background colors are forced to print properly */
+  .ticket-pass-header {
+    background: #1b5e20 !important;
+    color: #ffffff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .ticket-pass-divider .divider-circle {
+    display: none !important;
+  }
+}
+

@@ -165,25 +165,38 @@ router.post("/reset-password/:token", async (req, res) => {
 router.get("/bookings", authMiddleware, getAllBookings);
 
 // =======================
-// UPDATE BOOKING STATUS (Approve / Cancel / Complete)
+// UPDATE BOOKING STATUS & GUIDE ASSIGNMENT (Approve / Cancel / Complete)
 // =======================
+const sendTicketEmail = require("../utils/ticketEmail");
+
 router.patch("/bookings/:id", authMiddleware, async (req, res) => {
   try {
-    const { status } = req.body;
+    const { status, assignedGuide } = req.body;
 
-    // safety check
-    if (!["pending", "approved", "completed", "cancelled"].includes(status)) {
-      return res.status(400).json({ message: "Invalid status" });
+    const updates = {};
+    if (status) {
+      if (!["pending", "approved", "completed", "cancelled"].includes(status)) {
+        return res.status(400).json({ message: "Invalid status" });
+      }
+      updates.status = status;
+    }
+    if (assignedGuide !== undefined) {
+      updates.assignedGuide = assignedGuide;
     }
 
     const booking = await Booking.findByIdAndUpdate(
       req.params.id,
-      { status },
+      updates,
       { new: true }
     );
 
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
+    }
+
+    // Dynamic Boarding ticket trigger
+    if (status === "approved") {
+      await sendTicketEmail(booking);
     }
 
     res.json(booking);

@@ -1,4 +1,9 @@
 /* Global Styles */
+:root {
+  --primary-color: #4caf50;
+  --primary-hover: #388e3c;
+  --primary-gradient: linear-gradient(135deg, var(--primary-color), #2e7d32);
+}
 body {
   font-family: sans-serif;
   margin: 0;

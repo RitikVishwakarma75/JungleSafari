@@ -1,6 +1,7 @@
 // controllers/user.js
 const Booking = require("../models/booking");
 const Contact = require("../models/contact");
+const sendTicketEmail = require("../utils/ticketEmail");
 
 // Handle Contact Form
 
@@ -37,6 +38,8 @@ async function handleBookSafari(req, res) {
     visitors,
     safariType,
     message,
+    selectedSeats,
+    totalPrice,
   } = req.body;
 
   // Basic validation
@@ -62,13 +65,20 @@ async function handleBookSafari(req, res) {
       visitors: Number(visitors), // ✅ ensure Number
       safariType,
       message,
+      selectedSeats: selectedSeats || [],
+      totalPrice: totalPrice || 0,
+      status: "approved", // Successful payment via checkout triggers approval
     });
 
     console.log("✅ Safari booking saved:", booking._id);
 
+    // Send boarding ticket email immediately!
+    await sendTicketEmail(booking);
+
     return res.status(201).json({
-      message: "Safari booked successfully!",
+      message: "Safari booked and payment processed successfully!",
       bookingId: booking._id,
+      booking: booking,
     });
   } catch (error) {
     console.error("❌ Booking error:", error);

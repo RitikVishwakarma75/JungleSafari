@@ -53,6 +53,22 @@ const bookingSchema = new mongoose.Schema(
       enum: ["pending", "approved", "completed", "cancelled"],
       default: "pending",
     },
+    selectedSeats: {
+      type: [String],
+      default: [],
+    },
+    totalPrice: {
+      type: Number,
+      default: 0,
+    },
+    tenantId: {
+      type: String,
+      default: "corbett-trails", // partitions client bookings by tenant
+    },
+    assignedGuide: {
+      type: String,
+      default: null, // assigned driver/guide for the safari session
+    },
   },
   { timestamps: true }
 );

@@ -16,6 +16,10 @@ import Locations from "./pages/Locations";
 import Booking from "./pages/Booking";
 import Reviews from "./pages/Reviews";
 import Team from "./pages/Team";
+import JunglePlanner from "./pages/JunglePlanner";
+import Sightings from "./pages/Sightings";
+import GuidePortal from "./pages/GuidePortal";
+import OperatorOnboarding from "./pages/OperatorOnboarding";
 
 import "./App.css";
 
@@ -40,14 +44,38 @@ export default function App() {
           element={<AdminResetPassword />}
         />
 
-        {/* EXISTING ROUTES */}
+        {/* MOBILE GUIDE PORTAL */}
+        <Route path="/guide/portal" element={<GuidePortal />} />
+
+        {/* SAAS ONBOARDING PORTAL */}
+        <Route path="/saas-signup" element={<OperatorOnboarding />} />
+
+        {/* EXISTING ROUTES & MULTI-TENANT SAAS ROUTING */}
+        <Route path="/:tenantSlug" element={<Home />} />
+
         <Route path="/about" element={<About />} />
+        <Route path="/:tenantSlug/about" element={<About />} />
+
         <Route path="/locations" element={<Locations />} />
+        <Route path="/:tenantSlug/locations" element={<Locations />} />
+        
         <Route path="/booking" element={<Booking />} />
+        <Route path="/:tenantSlug/booking" element={<Booking />} />
+        
+        <Route path="/planner" element={<JunglePlanner />} />
+        <Route path="/:tenantSlug/planner" element={<JunglePlanner />} />
+        
+        <Route path="/sightings" element={<Sightings />} />
+        <Route path="/:tenantSlug/sightings" element={<Sightings />} />
+
         <Route path="/team" element={<Team />} />
+        <Route path="/:tenantSlug/team" element={<Team />} />
+
         <Route path="/reviews" element={<Reviews />} />
+        <Route path="/:tenantSlug/reviews" element={<Reviews />} />
 
         <Route path="/contact" element={<Contact />} />
+        <Route path="/:tenantSlug/contact" element={<Contact />} />
       </Routes>
       <ChatBot />
     </BrowserRouter>

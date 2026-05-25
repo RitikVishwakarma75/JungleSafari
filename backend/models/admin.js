@@ -22,6 +22,10 @@ const adminSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    tenantId: {
+      type: String,
+      default: "corbett-trails", // separates operators by tenant boundaries
+    },
   },
   { timestamps: true }
 );

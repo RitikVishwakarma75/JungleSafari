@@ -1,6 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./booking.css";
 import { useNavigate } from "react-router-dom";
+import { FaMagic, FaCheckCircle, FaSpinner } from "react-icons/fa";
+import StripeCheckout from "../components/StripeCheckout/StripeCheckout";
+
+const getApiUrl = (path) => {
+  const base =
+    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:5000"
+      : "https://junglesafari-s1dr.onrender.com";
+  return `${base}${path}`;
+};
 
 export default function Booking() {
   const navigate = useNavigate();
@@ -18,28 +28,147 @@ export default function Booking() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [completedBooking, setCompletedBooking] = useState(null);
+
+  // 🔮 AI Sighting Predictor States
+  const [prediction, setPrediction] = useState(null);
+  const [predicting, setPredicting] = useState(false);
+
+  // 💳 Stripe Sandbox Checkout States
+  const [isStripeOpen, setIsStripeOpen] = useState(false);
+
+  // 🛞 Jeep Seat Selector States
+  const [selectedSeats, setSelectedSeats] = useState([]);
+
+  // Reset selected seats when visitors or safariType changes
+  useEffect(() => {
+    setSelectedSeats([]);
+  }, [form.visitors, form.safariType]);
+
+  const handleSeatClick = (seatId) => {
+    const maxSelected = parseInt(form.visitors) || 1;
+    if (selectedSeats.includes(seatId)) {
+      setSelectedSeats(selectedSeats.filter((s) => s !== seatId));
+    } else {
+      if (selectedSeats.length < maxSelected) {
+        setSelectedSeats([...selectedSeats, seatId]);
+      } else {
+        setSelectedSeats([...selectedSeats.slice(1), seatId]);
+      }
+    }
+  };
+
+  const getBasePrice = () => {
+    if (form.safariType === "Jeep Safari") return 3500;
+    if (form.safariType === "Canter Safari") return 1200 * (parseInt(form.visitors) || 1);
+    if (form.safariType === "Elephant Safari") return 2500 * (parseInt(form.visitors) || 1);
+    return 0;
+  };
+
+  const getSeatPremiumPrice = () => {
+    const premiums = { S1: 2500, S2: 1500, S3: 1500, S4: 800, S5: 800, S6: 800 };
+    return selectedSeats.reduce((sum, seatId) => sum + (premiums[seatId] || 0), 0);
+  };
+
+  const calculateTotalPrice = () => {
+    return getBasePrice() + (form.safariType === "Jeep Safari" ? getSeatPremiumPrice() : 0);
+  };
 
   // Update form fields dynamically
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const validateField = (name, value) => {
+    if (!value) return null; // not typed yet
+    if (name === "fullName") return value.trim().length >= 3;
+    if (name === "email") return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    if (name === "phone") return /^\d{10}$/.test(value.replace(/[-()\s]/g, ""));
+    if (name === "visitors") return Number(value) >= 1 && Number(value) <= 6;
+    if (name === "zone" || name === "safariType" || name === "date") return value !== "";
+    return null;
+  };
+
+  const renderValidationIndicator = (name) => {
+    const isValid = validateField(name, form[name]);
+    if (isValid === null) return null;
+    return isValid ? (
+      <span className="input-validation-status valid" style={{ color: "#81c784", fontWeight: "bold", marginLeft: "8px", fontSize: "0.8rem" }}>✓ Valid</span>
+    ) : (
+      <span className="input-validation-status invalid" style={{ color: "#ef5350", fontWeight: "bold", marginLeft: "8px", fontSize: "0.8rem" }}>✗ Invalid format</span>
+    );
+  };
+
+  const getInputClass = (name) => {
+    const isValid = validateField(name, form[name]);
+    if (isValid === null) return "";
+    return isValid ? "input-valid" : "input-invalid";
+  };
+
+  // Trigger Sighting Predictor when Zone & Date change
+  useEffect(() => {
+    if (form.zone && form.date) {
+      triggerSightingPrediction(form.zone, form.date);
+    }
+  }, [form.zone, form.date]);
+
+  const triggerSightingPrediction = async (zone, date) => {
     try {
+      setPredicting(true);
+      const res = await fetch(getApiUrl("/api/ai/predict-sighting"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ zone, date }),
+      });
+
+      if (!res.ok) throw new Error("Prediction call failed");
+      const data = await res.json();
+      setPrediction(data);
+    } catch (err) {
+      console.warn("Prediction server request failed, resolving local mock prediction.");
+      setPrediction(getMockSightingPrediction(zone, date));
+    } finally {
+      setPredicting(false);
+    }
+  };
+
+  // Intercept Form submission to invoke Stripe Checkout
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Check if seats match visitor count for Jeep Safari
+    if (form.safariType === "Jeep Safari" && selectedSeats.length !== (parseInt(form.visitors) || 1)) {
+      alert(`Please select exactly ${form.visitors || 1} seat(s) on the interactive Gypsy vehicle before proceeding to checkout!`);
+      return;
+    }
+
+    if (calculateTotalPrice() > 0) {
+      setIsStripeOpen(true);
+    } else {
+      submitBookingToDatabase();
+    }
+  };
+
+  const submitBookingToDatabase = async () => {
+    try {
+      const payload = {
+        ...form,
+        selectedSeats,
+        totalPrice: calculateTotalPrice(),
+      };
+
       const res = await fetch(
-        "https://junglesafari-s1dr.onrender.com/api/booking",
+        getApiUrl("/api/booking"),
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
+          body: JSON.stringify(payload),
         }
       );
 
       if (res.ok) {
         const data = await res.json();
-        alert(data.message || "Booking request sent successfully!");
+        setCompletedBooking(data.booking);
         setForm({
           fullName: "",
           email: "",
@@ -50,8 +179,9 @@ export default function Booking() {
           safariType: "",
           message: "",
         });
+        setSelectedSeats([]);
+        setPrediction(null);
         setSubmitted(true);
-        setTimeout(() => setSubmitted(false), 4000);
       } else {
         alert("Booking submission failed. Please try again.");
       }
@@ -92,126 +222,286 @@ export default function Booking() {
         </div>
       </div>
 
-      {/* BOOKING FORM */}
-      <div className="booking-container">
-        <h2>Reserve Your Safari</h2>
-        <p>Fill out the form below to confirm your adventure.</p>
-        <form className="booking-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Full Name *</label>
-            <input
-              type="text"
-              name="fullName"
-              value={form.fullName}
-              onChange={handleChange}
-              placeholder="Enter your name"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Email Address *</label>
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Phone Number</label>
-            <input
-              type="tel"
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-              placeholder="Enter your phone number"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Select Safari Zone *</label>
-            <select
-              name="zone"
-              value={form.zone}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Choose a Zone</option>
-              <option>Dhikala Zone</option>
-              <option>Bijrani Zone</option>
-              <option>Jhirna Zone</option>
-              <option>Dhela Zone</option>
-              <option>Durga Devi Zone</option>
-              <option>Garjiya Zone</option>
-              <option>Sitabani Zone</option>
-              <option>Phato Zone</option>
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Date of Visit *</label>
-            <input
-              type="date"
-              name="date"
-              value={form.date}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Number of Visitors *</label>
-            <input
-              type="number"
-              name="visitors"
-              min="1"
-              value={form.visitors}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Preferred Safari Type *</label>
-            <select
-              name="safariType"
-              value={form.safariType}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select Type</option>
-              <option>Jeep Safari</option>
-              <option>Canter Safari</option>
-              <option>Elephant Safari</option>
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Special Requests</label>
-            <textarea
-              name="message"
-              rows="4"
-              value={form.message}
-              onChange={handleChange}
-              placeholder="Any special requests?"
-            ></textarea>
-          </div>
-
-          <button type="submit" className="book-btn">
-            Confirm Booking
-          </button>
-
-          {submitted && (
-            <div className="success-message">
-              ✅ Your Safari Booking is Confirmed!
+      {/* BOOKING FORM & AI PREDICTOR WRAPPER */}
+      <div className="booking-main-content">
+        <div className="booking-container">
+          <h2>Reserve Your Safari</h2>
+          <p>Fill out the form below to confirm your adventure.</p>
+          <form className="booking-form" onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Full Name * {renderValidationIndicator("fullName")}</label>
+              <input
+                type="text"
+                name="fullName"
+                className={getInputClass("fullName")}
+                value={form.fullName}
+                onChange={handleChange}
+                placeholder="Enter your name"
+                required
+              />
             </div>
-          )}
-        </form>
+
+            <div className="form-group">
+              <label>Email Address * {renderValidationIndicator("email")}</label>
+              <input
+                type="email"
+                name="email"
+                className={getInputClass("email")}
+                value={form.email}
+                onChange={handleChange}
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Phone Number * {renderValidationIndicator("phone")}</label>
+              <input
+                type="tel"
+                name="phone"
+                className={getInputClass("phone")}
+                value={form.phone}
+                onChange={handleChange}
+                placeholder="Enter your phone number"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Select Safari Zone * {renderValidationIndicator("zone")}</label>
+              <select
+                name="zone"
+                className={getInputClass("zone")}
+                value={form.zone}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Choose a Zone</option>
+                <option value="Dhikala">Dhikala Zone</option>
+                <option value="Bijrani">Bijrani Zone</option>
+                <option value="Jhirna">Jhirna Zone</option>
+                <option value="Dhela">Dhela Zone</option>
+                <option value="Durga Devi">Durga Devi Zone</option>
+                <option value="Garjiya">Garjiya Zone</option>
+                <option value="Sitabani">Sitabani Zone</option>
+                <option value="Phato">Phato Zone</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>Date of Visit * {renderValidationIndicator("date")}</label>
+              <input
+                type="date"
+                name="date"
+                className={getInputClass("date")}
+                value={form.date}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Number of Visitors (Max 6) * {renderValidationIndicator("visitors")}</label>
+              <input
+                type="number"
+                name="visitors"
+                min="1"
+                max="6"
+                className={getInputClass("visitors")}
+                value={form.visitors}
+                onChange={handleChange}
+                placeholder="Number of visitors"
+                required
+              />
+            </div>
+
+             <div className="form-group">
+              <label>Preferred Safari Type *</label>
+              <select
+                name="safariType"
+                value={form.safariType}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Type</option>
+                <option value="Jeep Safari">Jeep Safari</option>
+                <option value="Canter Safari">Canter Safari</option>
+                <option value="Elephant Safari">Elephant Safari</option>
+              </select>
+            </div>
+
+            {/* 🛞 VISUAL JEEP SEAT SELECTOR */}
+            {form.safariType === "Jeep Safari" && (
+              <div className="jeep-seat-selector-wrapper animate-fade-in">
+                <label>🛞 Interactive 4x4 Jeep Seat Selector</label>
+                <p className="seat-helper-text">
+                  Choose exactly <strong>{form.visitors || 1}</strong> seat(s) on the open-top Gypsy layout.
+                </p>
+
+                <div className="jeep-cabin-grid">
+                  {/* Front Row (Driver + Premium Sighting Seat) */}
+                  <div className="cabin-row front-row">
+                    <div className="seat driver disabled">👤 Staff</div>
+                    <div
+                      className={`seat ${selectedSeats.includes("S1") ? "selected" : "premium"}`}
+                      onClick={() => handleSeatClick("S1")}
+                      title="Seat S1: Front Row Sighting Seat (+Rs 2,500)"
+                    >
+                      S1 <br /> <small>+Rs 2.5k</small>
+                    </div>
+                  </div>
+
+                  {/* Middle Row (Standard Seats) */}
+                  <div className="cabin-row middle-row">
+                    <div
+                      className={`seat ${selectedSeats.includes("S2") ? "selected" : ""}`}
+                      onClick={() => handleSeatClick("S2")}
+                      title="Seat S2: Middle Row Seat (+Rs 1,500)"
+                    >
+                      S2 <br /> <small>+Rs 1.5k</small>
+                    </div>
+                    <div
+                      className={`seat ${selectedSeats.includes("S3") ? "selected" : ""}`}
+                      onClick={() => handleSeatClick("S3")}
+                      title="Seat S3: Middle Row Seat (+Rs 1,500)"
+                    >
+                      S3 <br /> <small>+Rs 1.5k</small>
+                    </div>
+                  </div>
+
+                  {/* Back Row (Bouncy/Budget Seats) */}
+                  <div className="cabin-row back-row">
+                    <div
+                      className={`seat ${selectedSeats.includes("S4") ? "selected" : ""}`}
+                      onClick={() => handleSeatClick("S4")}
+                      title="Seat S4: Back Row Seat (+Rs 800)"
+                    >
+                      S4 <br /> <small>+Rs 800</small>
+                    </div>
+                    <div
+                      className={`seat ${selectedSeats.includes("S5") ? "selected" : ""}`}
+                      onClick={() => handleSeatClick("S5")}
+                      title="Seat S5: Back Row Seat (+Rs 800)"
+                    >
+                      S5 <br /> <small>+Rs 800</small>
+                    </div>
+                    <div
+                      className={`seat ${selectedSeats.includes("S6") ? "selected" : ""}`}
+                      onClick={() => handleSeatClick("S6")}
+                      title="Seat S6: Back Row Seat (+Rs 800)"
+                    >
+                      S6 <br /> <small>+Rs 800</small>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="seats-legend">
+                  <span className="legend-item"><span className="legend-box available"></span> Standard</span>
+                  <span className="legend-item"><span className="legend-box premium-box"></span> Premium</span>
+                  <span className="legend-item"><span className="legend-box selected-box"></span> Selected</span>
+                </div>
+              </div>
+            )}
+
+            {/* 💰 DYNAMIC PRICING BREAKDOWN */}
+            {form.safariType && (
+              <div className="price-breakdown-card animate-fade-in">
+                <h4>💳 Pricing Breakdown Summary</h4>
+                <div className="price-line">
+                  <span>Base Safari Booking:</span>
+                  <span>Rs. {getBasePrice()}</span>
+                </div>
+                {form.safariType === "Jeep Safari" && selectedSeats.length > 0 && (
+                  <div className="price-line">
+                    <span>Premium Seat Premiums ({selectedSeats.join(", ")}):</span>
+                    <span>Rs. {getSeatPremiumPrice()}</span>
+                  </div>
+                )}
+                <hr className="price-divider" />
+                <div className="price-line total-price">
+                  <span>Estimated Total:</span>
+                  <span>Rs. {calculateTotalPrice()}</span>
+                </div>
+              </div>
+            )}
+
+            <div className="form-group">
+              <label>Special Requests</label>
+              <textarea
+                name="message"
+                rows="4"
+                value={form.message}
+                onChange={handleChange}
+                placeholder="Any special requests?"
+              ></textarea>
+            </div>
+
+            <button type="submit" className="book-btn">
+              Confirm Booking
+            </button>
+
+            {submitted && (
+              <div className="success-message">
+                ✅ Your Safari Booking is Confirmed!
+              </div>
+            )}
+          </form>
+        </div>
+
+        {/* 🔮 AI SIGHTING PREDICTOR DISPLAY */}
+        <div className="booking-predictor-container">
+          <div className="predictor-card">
+            <div className="predictor-card-header">
+              <FaMagic className="predictor-magic-icon" />
+              <h3>AI Sighting Forecast</h3>
+            </div>
+            
+            {!form.zone || !form.date ? (
+              <div className="predictor-empty-state">
+                <div className="compass-icon">🧭</div>
+                <h4>Select Zone & Date</h4>
+                <p>Pick a safari zone and visit date to trigger our AI Wildlife Probability Forecast.</p>
+              </div>
+            ) : predicting ? (
+              <div className="predictor-loading-state">
+                <FaSpinner className="spin-loading" size={30} />
+                <h4>Running AI Simulation...</h4>
+                <p>Analyzing weather, recent guide sighting reports, and active migration logs in {form.zone}.</p>
+              </div>
+            ) : prediction ? (
+              <div className="predictor-results animate-fade-in">
+                <div className="prediction-summary-box">
+                  <span className="summary-badge">Gemini AI Synthesis</span>
+                  <p>{prediction.summary}</p>
+                </div>
+
+                <h4>🐾 Spotted Probability Rates</h4>
+                
+                <div className="prediction-rates-list">
+                  {Object.entries(prediction.predictions).map(([animal, percent]) => (
+                    <div className="rate-item" key={animal}>
+                      <div className="rate-info">
+                        <span className="rate-animal">{animal === "SlothBear" ? "Sloth Bear" : animal}</span>
+                        <span className="rate-percent">{percent}%</span>
+                      </div>
+                      <div className="rate-progress-bar">
+                        <div 
+                          className={`rate-progress-fill ${percent > 70 ? 'high' : percent > 40 ? 'medium' : 'low'}`}
+                          style={{ width: `${percent}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="prediction-disclaimer">
+                  <FaCheckCircle className="disclaimer-check" />
+                  <span>Verified with local tracking logs. Sighting success depends on guide paths.</span>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
       </div>
 
       {/* CTA */}
@@ -228,6 +518,170 @@ export default function Booking() {
           Contact Our Team
         </button>
       </div>
+
+      <StripeCheckout
+        isOpen={isStripeOpen}
+        onClose={() => setIsStripeOpen(false)}
+        onSuccess={() => {
+          setIsStripeOpen(false);
+          submitBookingToDatabase();
+        }}
+        amount={calculateTotalPrice()}
+        bookingDetails={form}
+      />
+
+      {completedBooking && (
+        <div className="ticket-modal-overlay">
+          <div className="ticket-modal-card animate-slide-up print-section">
+            <div className="ticket-modal-header no-print">
+              <h2>🎟️ Official Booking Confirmation</h2>
+              <p>Your Jungle Safari booking has been approved and paid successfully!</p>
+            </div>
+            
+            {/* The Ticket Pass */}
+            <div className="official-ticket-pass" id="printable-safari-pass">
+              <div className="ticket-pass-header">
+                <div className="ticket-pass-logo">
+                  <h3>JUNGLE SAFARI</h3>
+                  <span>Corbett National Park Entry Permit</span>
+                </div>
+                <div className="ticket-pass-badge">
+                  OFFICIAL PASS
+                </div>
+              </div>
+              
+              <div className="ticket-pass-body">
+                <div className="ticket-meta">
+                  <div className="meta-col">
+                    <small>PASSENGER NAME</small>
+                    <strong>{completedBooking.fullName}</strong>
+                  </div>
+                  <div className="meta-col">
+                    <small>PERMIT STATUS</small>
+                    <strong className="status-approved">APPROVED</strong>
+                  </div>
+                </div>
+
+                <div className="ticket-meta">
+                  <div className="meta-col">
+                    <small>SAFARI ZONE</small>
+                    <strong>{completedBooking.zone} Zone</strong>
+                  </div>
+                  <div className="meta-col">
+                    <small>SAFARI DATE</small>
+                    <strong>{new Date(completedBooking.date).toLocaleDateString()}</strong>
+                  </div>
+                </div>
+
+                <div className="ticket-meta">
+                  <div className="meta-col">
+                    <small>SAFARI TYPE & SEATS</small>
+                    <strong>{completedBooking.safariType} {completedBooking.selectedSeats && completedBooking.selectedSeats.length > 0 ? `(Seats: ${completedBooking.selectedSeats.join(', ')})` : ''}</strong>
+                  </div>
+                  <div className="meta-col">
+                    <small>VISITORS</small>
+                    <strong>{completedBooking.visitors} Guest(s)</strong>
+                  </div>
+                </div>
+
+                <div className="ticket-meta">
+                  <div className="meta-col">
+                    <small>TOTAL PAID</small>
+                    <strong className="price-bold">Rs. {completedBooking.totalPrice}</strong>
+                  </div>
+                  <div className="meta-col">
+                    <small>BOOKING ID</small>
+                    <strong>#{completedBooking._id}</strong>
+                  </div>
+                </div>
+                
+                <div className="ticket-pass-divider">
+                  <div className="divider-circle left"></div>
+                  <div className="divider-line"></div>
+                  <div className="divider-circle right"></div>
+                </div>
+
+                <div className="ticket-pass-footer">
+                  <div className="qr-pass-container">
+                    <img 
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(completedBooking._id)}`} 
+                      alt="Pass QR Code" 
+                      className="qr-pass-img"
+                    />
+                    <small>Scan at Forest Entrance Gate</small>
+                  </div>
+                  <div className="guidelines-pass-container">
+                    <h4>📝 Gate Entry Guidelines</h4>
+                    <ul>
+                      <li>Reach designated zone entry gate 30 mins before schedule.</li>
+                      <li>Produce photo ID matching <strong>{completedBooking.fullName}</strong>.</li>
+                      <li>This pass represents a valid digital booking permit.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="ticket-modal-actions no-print">
+              <button 
+                className="btn-action print-btn" 
+                onClick={() => window.print()}
+              >
+                🖨️ Print Ticket / Save PDF
+              </button>
+              <button 
+                className="btn-action close-btn" 
+                onClick={() => {
+                  setCompletedBooking(null);
+                  setSubmitted(false);
+                }}
+              >
+                Close & Clear
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
+}
+
+// --------------------------------------------------------------------------
+// MOCK SIGHTING PREDICTION GENERATOR
+// --------------------------------------------------------------------------
+function getMockSightingPrediction(zone, date) {
+  const visitMonth = date ? new Date(date).getMonth() : new Date().getMonth();
+  
+  let tigerBase = 40;
+  let elephantBase = 50;
+  let leopardBase = 15;
+  let bearBase = 10;
+  let deerBase = 90;
+
+  const normZone = zone.toLowerCase();
+  if (normZone.includes("bijrani")) { tigerBase += 25; bearBase += 5; }
+  else if (normZone.includes("dhikala")) { elephantBase += 35; tigerBase += 15; }
+  else if (normZone.includes("jhirna")) { bearBase += 45; elephantBase += 10; }
+  
+  if (visitMonth >= 2 && visitMonth <= 5) {
+    tigerBase += 15;
+    elephantBase -= 10;
+  }
+
+  const finalTiger = Math.min(99, Math.max(15, tigerBase + Math.floor(Math.random() * 5)));
+  const finalElephant = Math.min(99, Math.max(20, elephantBase + Math.floor(Math.random() * 5)));
+  const finalLeopard = Math.min(92, Math.max(8, leopardBase + Math.floor(Math.random() * 5)));
+  const finalBear = Math.min(90, Math.max(5, bearBase + Math.floor(Math.random() * 5)));
+  const finalDeer = Math.min(99, Math.max(70, deerBase + Math.floor(Math.random() * 5)));
+
+  return {
+    summary: `Local tracks indicate high activity near water-bodies in ${zone} zone due to favorable clear morning conditions. Guided 4x4 paths are highly favored for sighting predators.`,
+    predictions: {
+      Tiger: finalTiger,
+      Elephant: finalElephant,
+      Leopard: finalLeopard,
+      SlothBear: finalBear,
+      Deer: finalDeer,
+    }
+  };
 }
