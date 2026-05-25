@@ -1,7 +1,9 @@
 // backend/routes/tenant.js
 const express = require("express");
+const bcrypt = require("bcryptjs");
 const router = express.Router();
 const Tenant = require("../models/tenant");
+const Admin = require("../models/admin");
 
 /**
  * 1. GET TENANT BY SLUG (Self-healing master tenant creation)
@@ -37,6 +39,7 @@ router.get("/:slug", async (req, res) => {
 
 /**
  * 2. REGISTER A NEW OPERATOR (TENANT)
+ * Automatically registers their admin account with password 'admin123'
  */
 router.post("/", async (req, res) => {
   const { name, slug, email, phone, themeColor } = req.body;
@@ -57,6 +60,20 @@ router.post("/", async (req, res) => {
       phone,
       themeColor: themeColor || "#4caf50",
     });
+
+    console.log(`🌟 Registered new SaaS Operator: ${name} (${slug})`);
+
+    // 🔥 Auto-create corresponding admin account for the new operator!
+    const adminExists = await Admin.findOne({ email: email.toLowerCase() });
+    if (!adminExists) {
+      const hashedPassword = await bcrypt.hash("admin123", 10);
+      await Admin.create({
+        email: email.toLowerCase(),
+        password: hashedPassword,
+        tenantId: slug.toLowerCase(),
+      });
+      console.log(`🔐 Auto-created Admin Account for ${name}: Email: ${email} | Pass: admin123`);
+    }
 
     res.status(201).json(newTenant);
   } catch (err) {

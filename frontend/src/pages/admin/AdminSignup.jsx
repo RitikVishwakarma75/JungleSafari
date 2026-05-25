@@ -2,6 +2,14 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./adminSignup.css";
 
+const getApiUrl = (path) => {
+  const base =
+    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:5000"
+      : "https://junglesafari-s1dr.onrender.com";
+  return `${base}${path}`;
+};
+
 export default function AdminSignup() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -23,7 +31,7 @@ export default function AdminSignup() {
 
     try {
       const res = await fetch(
-        "https://junglesafari-s1dr.onrender.com/api/admin/signup",
+        getApiUrl("/api/admin/signup"),
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -133,6 +133,13 @@ nav a.active {
 }
 
 /* ===================== */
+/* MOBILE ONLY UTILITY */
+/* ===================== */
+.mobile-only {
+  display: none !important;
+}
+
+/* ===================== */
 /* MOBILE VIEW */
 /* ===================== */
 @media (max-width: 992px) {
@@ -167,8 +174,9 @@ nav a.active {
   }
 
   /* ✅ Show Admin/Dashboard inside mobile menu */
-  .admin-mobile {
-    display: block;
+  .admin-mobile,
+  .mobile-only {
+    display: block !important;
     text-align: center;
   }
 }

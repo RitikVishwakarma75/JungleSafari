@@ -2,6 +2,14 @@
 import { useState } from "react";
 import "./adminForgotPassword.css";
 
+const getApiUrl = (path) => {
+  const base =
+    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:5000"
+      : "https://junglesafari-s1dr.onrender.com";
+  return `${base}${path}`;
+};
+
 export default function AdminForgotPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -14,7 +22,7 @@ export default function AdminForgotPassword() {
 
     try {
       await fetch(
-        "https://junglesafari-s1dr.onrender.com/api/admin/forgot-password",
+        getApiUrl("/api/admin/forgot-password"),
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

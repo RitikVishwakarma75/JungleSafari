@@ -3,6 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "./adminResetPassword.css";
 
+const getApiUrl = (path) => {
+  const base =
+    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:5000"
+      : "https://junglesafari-s1dr.onrender.com";
+  return `${base}${path}`;
+};
+
 export default function AdminResetPassword() {
   const { token } = useParams();
   const navigate = useNavigate();
@@ -24,7 +32,7 @@ export default function AdminResetPassword() {
 
     try {
       const res = await fetch(
-        `https://junglesafari-s1dr.onrender.com/api/admin/reset-password/${token}`,
+        getApiUrl(`/api/admin/reset-password/${token}`),
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

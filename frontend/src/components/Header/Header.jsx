@@ -132,8 +132,8 @@ export default function Header() {
 
           {/* ✅ MOBILE SAAS SIGNUP LINK (ROOT ONLY) */}
           {!tenantSlug && (
-            <NavLink to="/saas-signup" onClick={closeMenu}>
-              Launch SaaS
+            <NavLink to="/saas-signup" className="mobile-only" onClick={closeMenu}>
+              Launch SaaS 🚀
             </NavLink>
           )}
 

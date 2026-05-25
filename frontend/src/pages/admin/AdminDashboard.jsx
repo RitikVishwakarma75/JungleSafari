@@ -20,6 +20,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filter, setFilter] = useState("all");
+  const [tenantName, setTenantName] = useState("SaaS Operator");
 
   // 🔒 Protect dashboard + fetch bookings & guides
   useEffect(() => {
@@ -45,6 +46,20 @@ export default function AdminDashboard() {
         if (guidesRes.ok) {
           const guidesData = await guidesRes.json();
           setGuides(guidesData);
+        }
+
+        // 3. Fetch Tenant configuration for brand name
+        const savedTenantId = localStorage.getItem("adminTenantId") || "corbett-trails";
+        try {
+          const tenantRes = await fetch(getApiUrl(`/api/tenant/${savedTenantId}`));
+          if (tenantRes.ok) {
+            const tenantData = await tenantRes.json();
+            if (tenantData && tenantData.name) {
+              setTenantName(tenantData.name);
+            }
+          }
+        } catch (tenantErr) {
+          console.warn("Failed to load tenant configurations:", tenantErr);
         }
       } catch (err) {
         setError("Failed to load dashboard parameters");
@@ -139,7 +154,7 @@ export default function AdminDashboard() {
     <div className="admin-dashboard">
       <header className="dashboard-header">
         <div className="left-panel">
-          <h1>SaaS Operator Dashboard</h1>
+          <h1>{tenantName} Dashboard</h1>
           <p className="subtitle">Operational control center for reservations, payments, and naturalists.</p>
 
           <section className="stats">

@@ -3,6 +3,14 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./adminLogin.css";
 
+const getApiUrl = (path) => {
+  const base =
+    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:5000"
+      : "https://junglesafari-s1dr.onrender.com";
+  return `${base}${path}`;
+};
+
 export default function AdminLogin() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
@@ -28,7 +36,7 @@ export default function AdminLogin() {
 
     try {
       const res = await fetch(
-        "https://junglesafari-s1dr.onrender.com/api/admin/login",
+        getApiUrl("/api/admin/login"),
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -46,6 +54,7 @@ export default function AdminLogin() {
 
       // ✅ Save token (persistent login)
       localStorage.setItem("adminToken", data.token);
+      localStorage.setItem("adminTenantId", data.tenantId || "corbett-trails");
 
       // 🔥 Force reload so Header updates instantly
       window.location.href = "/admin/dashboard";
