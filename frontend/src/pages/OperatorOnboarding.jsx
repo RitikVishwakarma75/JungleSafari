@@ -18,6 +18,7 @@ export default function OperatorOnboarding() {
     phone: "",
     themeColor: "#4caf50",
     plan: "Starter",
+    password: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -44,6 +45,7 @@ export default function OperatorOnboarding() {
     if (name === "slug") return value.trim().length >= 3;
     if (name === "email") return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
     if (name === "phone") return /^\d{10}$/.test(value.replace(/[-()\s]/g, ""));
+    if (name === "password") return value.length >= 6;
     return null;
   };
 
@@ -171,6 +173,19 @@ export default function OperatorOnboarding() {
                 </div>
 
                 <div className="form-group-saas">
+                  <label>Secure Admin Password * {renderValidationIndicator("password")}</label>
+                  <input
+                    type="password"
+                    name="password"
+                    className={getInputClass("password")}
+                    value={form.password}
+                    onChange={handleChange}
+                    placeholder="Set password for your admin dashboard"
+                    required
+                  />
+                </div>
+
+                <div className="form-group-saas">
                   <label>Contact Phone {renderValidationIndicator("phone")}</label>
                   <input
                     type="text"
@@ -268,7 +283,7 @@ export default function OperatorOnboarding() {
                 <div className="link-item-saas">
                   <div className="link-info-saas">
                     <strong>3. Admin Operations Panel</strong>
-                    <span>Monitor dynamic stats, process payments, and dispatch QR passes</span>
+                    <span>Login using Email: <strong>{registeredTenant.email}</strong> and your secure chosen Password</span>
                   </div>
                   <a href="/admin/login" target="_blank" rel="noopener noreferrer" className="saas-action-link-btn secondary-saas-btn">
                     Open Admin Dashboard

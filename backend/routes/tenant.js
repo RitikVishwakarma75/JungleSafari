@@ -42,7 +42,7 @@ router.get("/:slug", async (req, res) => {
  * Automatically registers their admin account with password 'admin123'
  */
 router.post("/", async (req, res) => {
-  const { name, slug, email, phone, themeColor } = req.body;
+  const { name, slug, email, phone, themeColor, password } = req.body;
   if (!name || !slug || !email) {
     return res.status(400).json({ message: "Name, slug, and email are required" });
   }
@@ -66,13 +66,14 @@ router.post("/", async (req, res) => {
     // 🔥 Auto-create corresponding admin account for the new operator!
     const adminExists = await Admin.findOne({ email: email.toLowerCase() });
     if (!adminExists) {
-      const hashedPassword = await bcrypt.hash("admin123", 10);
+      const userPassword = password || "admin123";
+      const hashedPassword = await bcrypt.hash(userPassword, 10);
       await Admin.create({
         email: email.toLowerCase(),
         password: hashedPassword,
         tenantId: slug.toLowerCase(),
       });
-      console.log(`🔐 Auto-created Admin Account for ${name}: Email: ${email} | Pass: admin123`);
+      console.log(`🔐 Auto-created Admin Account for ${name}: Email: ${email} | Pass: [User Chosen]`);
     }
 
     res.status(201).json(newTenant);
