@@ -32,14 +32,27 @@ async function adminLogin(req, res) {
   }
 }
 
+/**
+ * Enforces strict multi-tenant boundary checks on bookings list queries.
+ * Master developer admin (corbett-trails) sees global statistics.
+ */
 async function getAllBookings(req, res) {
   try {
-    const bookings = await Booking.find().sort({ createdAt: -1 });
+    const query = {};
+    
+    // If the admin is scoped to a specific tenant, isolate their database queries!
+    if (req.admin && req.admin.tenantId && req.admin.tenantId !== "corbett-trails") {
+      query.tenantId = req.admin.tenantId;
+      console.log(`🔒 [Data Isolation] Scoped bookings query for tenant: ${req.admin.tenantId}`);
+    } else {
+      console.log("🔓 [Global Override] Scoped bookings query as Master Super Admin");
+    }
+
+    const bookings = await Booking.find(query).sort({ createdAt: -1 });
     res.json(bookings);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch bookings" });
   }
 }
-
 
 module.exports = { adminLogin, getAllBookings };

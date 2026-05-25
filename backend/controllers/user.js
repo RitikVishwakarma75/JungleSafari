@@ -40,6 +40,7 @@ async function handleBookSafari(req, res) {
     message,
     selectedSeats,
     totalPrice,
+    tenantId,
   } = req.body;
 
   // Basic validation
@@ -68,6 +69,7 @@ async function handleBookSafari(req, res) {
       selectedSeats: selectedSeats || [],
       totalPrice: totalPrice || 0,
       status: "approved", // Successful payment via checkout triggers approval
+      tenantId: tenantId || "corbett-trails",
     });
 
     console.log("✅ Safari booking saved:", booking._id);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./booking.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaMagic, FaCheckCircle, FaSpinner } from "react-icons/fa";
 import StripeCheckout from "../components/StripeCheckout/StripeCheckout";
 
@@ -14,6 +14,7 @@ const getApiUrl = (path) => {
 
 export default function Booking() {
   const navigate = useNavigate();
+  const { tenantSlug } = useParams();
   
   // State for form fields
   const [form, setForm] = useState({
@@ -155,6 +156,7 @@ export default function Booking() {
         ...form,
         selectedSeats,
         totalPrice: calculateTotalPrice(),
+        tenantId: tenantSlug || "corbett-trails",
       };
 
       const res = await fetch(
