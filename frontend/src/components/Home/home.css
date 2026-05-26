@@ -145,12 +145,29 @@ body {
   padding: 30px;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
   transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+  min-width: 0; /* Enable shrinking below content min-width inside grid containers */
 }
 
 .status-card:hover {
   transform: translateY(-8px);
   border-color: rgba(76, 175, 80, 0.5);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(76, 175, 80, 0.25);
+}
+
+@media (max-width: 768px) {
+  .live-status-section {
+    padding: 2.5rem 1rem;
+  }
+  
+  .status-card {
+    padding: 20px;
+  }
+
+  .status-table th, 
+  .status-table td {
+    padding: 10px 8px;
+    font-size: 0.82rem;
+  }
 }
 
 .card-header {

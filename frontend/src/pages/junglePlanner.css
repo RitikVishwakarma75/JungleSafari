@@ -554,3 +554,55 @@
   line-height: 1.5;
   color: #e3ebe3;
 }
+
+@media (max-width: 768px) {
+  .planner-container {
+    padding: 0 12px;
+    margin: 80px auto 30px auto;
+  }
+
+  .planner-hero h1 {
+    font-size: 2rem;
+  }
+
+  .planner-card {
+    padding: 20px;
+  }
+
+  .group-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+  }
+
+  .interest-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+  }
+
+  .interest-checkbox-label {
+    padding: 10px 14px;
+    font-size: 0.85rem;
+  }
+
+  .timeline-line {
+    margin-left: 10px;
+    padding-left: 20px;
+    gap: 30px;
+  }
+
+  .timeline-day-card {
+    padding: 20px;
+  }
+
+  .day-number-bubble {
+    position: relative;
+    left: 0;
+    top: 0;
+    margin-bottom: 15px;
+    width: auto;
+    display: inline-flex;
+    padding: 6px 16px;
+    height: auto;
+    box-shadow: 0 2px 6px rgba(76, 175, 80, 0.2);
+  }
+}

@@ -326,3 +326,37 @@
     opacity: 0.6;
   }
 }
+
+@media (max-width: 768px) {
+  .reviews-hero h1 {
+    font-size: 2rem;
+  }
+
+  .reviews-hero p {
+    font-size: 1rem;
+  }
+
+  .reviews-container {
+    padding: 2.5rem 1rem;
+  }
+
+  .review-form-section {
+    padding: 2rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .avatar-selector-grid {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .avatar-option-chip {
+    padding: 6px 8px;
+    flex: 1 1 40%;
+  }
+
+  .avatar-option-chip span.emoji {
+    font-size: 1.4rem;
+  }
+}
