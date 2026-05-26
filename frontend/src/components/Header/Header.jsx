@@ -263,14 +263,6 @@ export default function Header() {
         >
           {isAdminLoggedIn ? "Dashboard" : "Admin"}
         </Link>
-
-        <Link
-          to={getTenantPath("/contact#contact-form")}
-          className="headerBtn"
-          onClick={closeMenu}
-        >
-          Contact us
-        </Link>
       </div>
     </header>
   );

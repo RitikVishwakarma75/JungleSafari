@@ -34,18 +34,25 @@
 }
 
 .add-sighting-btn {
-  background: linear-gradient(135deg, #4caf50, #2e7d32);
-  color: #fff;
-  border: none;
-  padding: 14px 28px;
-  border-radius: 30px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
+  background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 14px 28px !important;
+  border-radius: 30px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4) !important;
+  transition: all 0.3s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  gap: 8px !important;
+  width: auto !important;
+  min-width: max-content !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
 }
 
 .add-sighting-btn:hover {

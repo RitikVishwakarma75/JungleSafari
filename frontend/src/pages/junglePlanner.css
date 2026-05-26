@@ -214,7 +214,7 @@
   background: linear-gradient(135deg, #4caf50, #2e7d32);
   color: #fff;
   border: none;
-  padding: 16px;
+  padding: 16px 24px;
   border-radius: 12px;
   font-size: 1.1rem;
   font-weight: 700;
@@ -222,6 +222,24 @@
   box-shadow: 0 5px 20px rgba(76, 175, 80, 0.35);
   transition: all 0.3s;
   margin-top: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  white-space: nowrap;
+  width: 100%;
+  max-width: 380px;
+  align-self: center;
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  .generate-plan-btn {
+    font-size: 0.95rem;
+    padding: 14px 16px;
+    white-space: normal;
+    text-align: center;
+  }
 }
 
 .generate-plan-btn:hover {

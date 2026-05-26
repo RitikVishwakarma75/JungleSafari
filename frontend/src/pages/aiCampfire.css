@@ -665,13 +665,28 @@
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.06);
   color: #b9d3b9;
-  padding: 12px;
+  padding: 12px 18px;
   border-radius: 10px;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.25s ease;
   text-align: center;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  .mode-btn {
+    white-space: normal;
+    font-size: 0.8rem;
+    padding: 10px 12px;
+  }
 }
 
 .mode-btn:hover {

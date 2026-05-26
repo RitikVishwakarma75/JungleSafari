@@ -99,9 +99,18 @@
   .booking-main-content {
     grid-template-columns: 1fr;
     gap: 30px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1.5rem;
+  }
+  .booking-container {
+    width: 100%;
+    box-sizing: border-box;
   }
   .booking-predictor-container {
     margin-left: 0 !important; /* Reset shift on mobile */
+    width: 100%;
+    box-sizing: border-box;
   }
 }
 
@@ -503,14 +512,25 @@
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
+  .booking-main-content {
+    padding: 0.75rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .booking-container {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .booking-form {
+    padding: 1.25rem 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
   .booking-intro {
     flex-direction: column;
   }
   .hero-text h1 {
     font-size: 2rem;
-  }
-  .booking-form {
-    padding: 1.5rem;
   }
   .book-btn {
     width: 100%;
