@@ -183,40 +183,51 @@ export default function Booking() {
   // Intercept Form submission to invoke Stripe Checkout
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("🚀 [Booking] Submit triggered. Form values:", form);
     
     // Check if seats match visitor count for Jeep Safari
     if (form.safariType === "Jeep Safari" && selectedSeats.length !== (parseInt(form.visitors) || 1)) {
+      console.warn("⚠️ [Booking] Seat count mismatch for Jeep Safari!");
       alert(`Please select exactly ${form.visitors || 1} seat(s) on the interactive Gypsy vehicle before proceeding to checkout!`);
       return;
     }
 
-    if (calculateTotalPrice() > 0) {
+    const price = calculateTotalPrice();
+    console.log("💰 [Booking] Calculated price:", price);
+
+    if (price > 0) {
+      console.log("💳 [Booking] Opening Stripe Sandbox Checkout modal...");
       setIsStripeOpen(true);
     } else {
+      console.log("🪵 [Booking] Free booking detected. Submitting straight to DB...");
       submitBookingToDatabase();
     }
   };
 
   const submitBookingToDatabase = async () => {
-    try {
-      const payload = {
-        ...form,
-        selectedSeats,
-        totalPrice: calculateTotalPrice(),
-        tenantId: tenantSlug || "corbett-trails",
-      };
+    const payload = {
+      ...form,
+      selectedSeats,
+      totalPrice: calculateTotalPrice(),
+      tenantId: tenantSlug || "corbett-trails",
+    };
+    console.log("📡 [Booking] Sending booking payload to backend:", payload);
 
-      const res = await fetch(
-        getApiUrl("/api/booking"),
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
+    try {
+      const url = getApiUrl("/api/booking");
+      console.log("🌐 [Booking] Target endpoint URL:", url);
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      console.log("📬 [Booking] Backend responded with status:", res.status, "ok:", res.ok);
 
       if (res.ok) {
         const data = await res.json();
+        console.log("🎉 [Booking] Booking completed successfully! Data:", data);
         setCompletedBooking(data.booking);
         setForm({
           fullName: "",
@@ -232,9 +243,12 @@ export default function Booking() {
         setPrediction(null);
         setSubmitted(true);
       } else {
+        const errData = await res.json().catch(() => ({}));
+        console.error("❌ [Booking] Server rejected submission:", errData);
         alert("Booking submission failed. Please try again.");
       }
     } catch (err) {
+      console.error("🚨 [Booking] Network/API call crashed! Error:", err);
       alert("A server error occurred. Please try later.");
     }
   };
