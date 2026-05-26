@@ -21,6 +21,8 @@ router.get("/:slug", async (req, res) => {
         email: "support@corbett.com",
         phone: "+91 98765 43210",
         themeColor: "#4caf50",
+        logo: "🦁",
+        address: "Ramnagar, Uttarakhand, India",
         plan: "Enterprise",
       });
       console.log("🌟 Master Tenant 'corbett-trails' auto-created successfully!");
@@ -42,7 +44,7 @@ router.get("/:slug", async (req, res) => {
  * Automatically registers their admin account with password 'admin123'
  */
 router.post("/", async (req, res) => {
-  const { name, slug, email, phone, themeColor, password } = req.body;
+  const { name, slug, email, phone, themeColor, logo, address, password } = req.body;
   if (!name || !slug || !email) {
     return res.status(400).json({ message: "Name, slug, and email are required" });
   }
@@ -59,6 +61,8 @@ router.post("/", async (req, res) => {
       email,
       phone,
       themeColor: themeColor || "#4caf50",
+      logo: logo || "",
+      address: address || "",
     });
 
     console.log(`🌟 Registered new SaaS Operator: ${name} (${slug})`);

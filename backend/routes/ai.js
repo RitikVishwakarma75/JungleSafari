@@ -6,6 +6,7 @@ const {
   parseChatSession,
   predictSighting,
   analyzeImage,
+  generateCampfireStory,
 } = require("../utils/gemini");
 
 /**
@@ -81,6 +82,25 @@ router.post("/scan-image", async (req, res) => {
   } catch (err) {
     console.error("AI Scanner Route Error:", err);
     res.status(500).json({ message: "Failed to scan wildlife image" });
+  }
+});
+
+/**
+ * 5. AI CAMPFIRE STORYTELLER NARRATOR
+ * Body: { topic, mode }
+ */
+router.post("/campfire", async (req, res) => {
+  try {
+    const { topic, mode } = req.body;
+    if (!topic || !mode) {
+      return res.status(400).json({ message: "Topic and mode are required" });
+    }
+
+    const story = await generateCampfireStory(topic, mode);
+    res.json({ story });
+  } catch (err) {
+    console.error("AI Campfire Route Error:", err);
+    res.status(500).json({ message: "Failed to generate campfire story" });
   }
 });
 

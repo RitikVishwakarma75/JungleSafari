@@ -1,6 +1,5 @@
-// frontend/src/pages/JunglePlanner.jsx
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaCalendarAlt, FaUserFriends, FaMapMarkedAlt, FaCompass, FaCheck, FaExclamationTriangle } from "react-icons/fa";
 import "./junglePlanner.css";
 
@@ -14,6 +13,54 @@ const getApiUrl = (path) => {
 
 export default function JunglePlanner() {
   const navigate = useNavigate();
+  const { tenantSlug } = useParams();
+  const [tenantConfig, setTenantConfig] = useState(null);
+
+  useEffect(() => {
+    if (!tenantSlug) {
+      setTenantConfig(null);
+      return;
+    }
+
+    const cachedKey = `tenant_config_${tenantSlug}`;
+    const cached = sessionStorage.getItem(cachedKey);
+    if (cached) {
+      try {
+        setTenantConfig(JSON.parse(cached));
+        return;
+      } catch (err) {
+        console.warn("Failed parsing cached config in planner, refetching...", err);
+      }
+    }
+
+    const fetchTenant = async () => {
+      try {
+        const base =
+          window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+            ? "http://localhost:5000"
+            : "https://junglesafari-s1dr.onrender.com";
+        const res = await fetch(`${base}/api/tenant/${tenantSlug}`);
+        if (res.ok) {
+          const data = await res.json();
+          sessionStorage.setItem(cachedKey, JSON.stringify(data));
+          setTenantConfig(data);
+        }
+      } catch (err) {
+        console.error("Failed to load tenant configurations in planner:", err);
+      }
+    };
+
+    fetchTenant();
+  }, [tenantSlug]);
+
+  const getBrandName = () => {
+    if (tenantConfig && tenantConfig.name) return tenantConfig.name;
+    if (!tenantSlug) return "Corbett Trails";
+    return tenantSlug
+      .split("-")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+  };
   const [duration, setDuration] = useState(3);
   const [groupType, setGroupType] = useState("Family with Kids");
   const [interests, setInterests] = useState(["Tiger Spotting", "Photography"]);
@@ -102,7 +149,7 @@ export default function JunglePlanner() {
       {/* Intro Hero */}
       <div className="planner-hero">
         <h1>✨ AI Jungle Planner</h1>
-        <p>Harness the power of artificial intelligence to generate a bespoke safari itinerary for Jim Corbett.</p>
+        <p>Harness the power of artificial intelligence to generate a bespoke safari itinerary for {getBrandName()}.</p>
       </div>
 
       {/* Input Panels */}
@@ -187,7 +234,7 @@ export default function JunglePlanner() {
             <div className="radar-circle circle-2"></div>
             <div className="radar-circle circle-3"></div>
           </div>
-          <h3>Consulting Corbett Trails AI Naturalist</h3>
+          <h3>Consulting {getBrandName()} AI Naturalist</h3>
           <p className="loading-message-text">"{loadingMessages[loadingStep]}"</p>
         </div>
       )}
@@ -199,7 +246,10 @@ export default function JunglePlanner() {
             <button className="back-to-planner-btn" onClick={() => setItinerary(null)}>
               ⬅️ Edit Preferences
             </button>
-            <button className="book-safari-btn" onClick={() => navigate("/Booking")}>
+            <button className="book-safari-btn" onClick={() => {
+              if (tenantSlug) navigate(`/${tenantSlug}/booking`);
+              else navigate("/booking");
+            }}>
               Proceed to Safari Booking ➡️
             </button>
           </div>
@@ -314,7 +364,7 @@ function getMockPlannerResult(duration, groupType, interests) {
   }
 
   return {
-    title: `The Ultimate ${interests.join(" & ")} Corbett Expedition`,
+    title: `The Ultimate ${interests.join(" & ")} ${getBrandName()} Expedition`,
     overview: `This customized ${days}-day itinerary is exclusively crafted for your group (${groupType}) emphasizing ${interests.join(", ")}. It details prime game-reserve outings optimized for optimal wildlife spotting chances while protecting standard safety thresholds.`,
     itinerary,
     packingList: [

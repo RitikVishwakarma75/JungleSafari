@@ -33,6 +33,14 @@ const tenantSchema = new mongoose.Schema(
       type: String,
       default: "#4caf50", // Hex color representing their main theme
     },
+    logo: {
+      type: String,
+      default: "",
+    },
+    address: {
+      type: String,
+      default: "",
+    },
     plan: {
       type: String,
       enum: ["Basic", "Pro", "Enterprise"],

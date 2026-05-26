@@ -116,6 +116,7 @@ export default function Locations() {
           <img
             src="https://images.news9live.com/wp-content/uploads/2024/03/Jim-Corbett-Reserve.jpg?w=802&enlarge=true"
             alt="Corbett Landscape"
+            loading="lazy"
           />
         </div>
       </div>
@@ -152,7 +153,7 @@ export default function Locations() {
         <div className="zones-list">
           {zones.map((zone, i) => (
             <div className="zone-card" key={i}>
-              <img src={zone.image} alt={zone.name} className="zone-img" />
+              <img src={zone.image} alt={zone.name} className="zone-img" loading="lazy" />
               <div className="zone-info">
                 <h3>{zone.name}</h3>
                 <p>{zone.desc}</p>

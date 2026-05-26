@@ -1,24 +1,92 @@
 // frontend/src/components/Contact/Contact.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Contact.css"; // Your existing CSS file
 import Footer from "../Footer/Footer";
-import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+
 const Contact = () => {
   const location = useLocation();
-useEffect(() => {
-  if (location.hash) {
-    setTimeout(() => {
-      const el = document.querySelector(location.hash);
-      if (el) {
-        const yOffset = -100; // header height
-        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
 
-        window.scrollTo({ top: y, behavior: "smooth" });
+  const pathParts = location.pathname.split("/").filter(Boolean);
+  const isSlugPart = (part) => {
+    const rootPages = [
+      "about",
+      "locations",
+      "booking",
+      "planner",
+      "sightings",
+      "campfire",
+      "reviews",
+      "team",
+      "contact",
+      "admin",
+      "guide"
+    ];
+    return part && !rootPages.includes(part.toLowerCase());
+  };
+
+  const tenantSlug = pathParts[0] && isSlugPart(pathParts[0]) ? pathParts[0] : "";
+  const [tenantConfig, setTenantConfig] = useState(null);
+
+  useEffect(() => {
+    if (!tenantSlug) {
+      setTenantConfig(null);
+      return;
+    }
+
+    const cachedKey = `tenant_config_${tenantSlug}`;
+    const cached = sessionStorage.getItem(cachedKey);
+    if (cached) {
+      try {
+        setTenantConfig(JSON.parse(cached));
+        return;
+      } catch (err) {
+        console.warn("Failed parsing cached config in contact, refetching...", err);
       }
-    }, 0);
-  }
-}, [location]);
+    }
+
+    const fetchTenant = async () => {
+      try {
+        const base =
+          window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+            ? "http://localhost:5000"
+            : "https://junglesafari-s1dr.onrender.com";
+        const res = await fetch(`${base}/api/tenant/${tenantSlug}`);
+        if (res.ok) {
+          const data = await res.json();
+          sessionStorage.setItem(cachedKey, JSON.stringify(data));
+          setTenantConfig(data);
+        }
+      } catch (err) {
+        console.error("Failed to load tenant configurations in contact:", err);
+      }
+    };
+
+    fetchTenant();
+  }, [tenantSlug]);
+
+  const getBrandName = () => {
+    if (tenantConfig && tenantConfig.name) return tenantConfig.name;
+    if (!tenantSlug) return "Corbett Trails";
+    return tenantSlug
+      .split("-")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+  };
+
+  useEffect(() => {
+    if (location.hash) {
+      setTimeout(() => {
+        const el = document.querySelector(location.hash);
+        if (el) {
+          const yOffset = -100; // header height
+          const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }
+      }, 0);
+    }
+  }, [location]);
 
   // State to hold all form field values
   const [form, setForm] = useState({
@@ -41,8 +109,12 @@ useEffect(() => {
     console.log("Submitting form with data:", form); // Good for debugging
 
     try {
+      const base =
+        window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+          ? "http://localhost:5000"
+          : "https://junglesafari-s1dr.onrender.com";
       const res = await fetch(
-        "https://junglesafari-s1dr.onrender.com/api/contact",
+        `${base}/api/contact`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -75,9 +147,9 @@ useEffect(() => {
   return (
     <div className="contact-container">
       <div className="contact-content" id="contact-form">
-        <h1 className="contact-title">Contact Us</h1>
+        <h1 className="contact-title">Contact {getBrandName()}</h1>
         <p className="contact-description">
-          Feel free to reach out to us for any inquiries or to start crafting
+          Feel free to reach out to us at {getBrandName()} for any inquiries or to start crafting
           your dream getaway. We are here to assist you.
         </p>
 

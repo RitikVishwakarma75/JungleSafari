@@ -15,8 +15,66 @@ const PARK_STATUSES = [
   { name: "Phato Zone", status: "Open", density: "Moderate", alert: "🦅 Golden Eagle nests spotted near tall tree tops" },
 ];
 
+import { useParams } from "react-router-dom";
+
 export default function Home() {
   const navigate = useNavigate();
+  const { tenantSlug } = useParams();
+  const [tenantConfig, setTenantConfig] = useState(null);
+
+  useEffect(() => {
+    if (!tenantSlug) {
+      setTenantConfig(null);
+      return;
+    }
+
+    const cachedKey = `tenant_config_${tenantSlug}`;
+    const cached = sessionStorage.getItem(cachedKey);
+    if (cached) {
+      try {
+        setTenantConfig(JSON.parse(cached));
+        return;
+      } catch (err) {
+        console.warn("Failed parsing cached config in home, refetching...", err);
+      }
+    }
+
+    const fetchTenant = async () => {
+      try {
+        const base =
+          window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+            ? "http://localhost:5000"
+            : "https://junglesafari-s1dr.onrender.com";
+        const res = await fetch(`${base}/api/tenant/${tenantSlug}`);
+        if (res.ok) {
+          const data = await res.json();
+          sessionStorage.setItem(cachedKey, JSON.stringify(data));
+          setTenantConfig(data);
+        }
+      } catch (err) {
+        console.error("Failed to load tenant configurations in home:", err);
+      }
+    };
+
+    fetchTenant();
+  }, [tenantSlug]);
+
+  const getBrandName = () => {
+    if (tenantConfig && tenantConfig.name) return tenantConfig.name;
+    if (!tenantSlug) return "Corbett Trails";
+    return tenantSlug
+      .split("-")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+  };
+
+  const handleBookNow = () => {
+    if (tenantSlug) {
+      navigate(`/${tenantSlug}/booking`);
+    } else {
+      navigate("/booking");
+    }
+  };
   
   // Dynamic simulated weather
   const [weather, setWeather] = useState({
@@ -43,13 +101,12 @@ export default function Home() {
       <section className="hero">
         <h1>DISCOVER THE WILD</h1>
         <p>
-          Welcome to Corbett Trails, where the call of the jungle meets the
-          rhythm of your heart. Nestled in the wilderness of Jim Corbett
-          National Park, we design bespoke safari experiences that blend
+          Welcome to {getBrandName()}, where the call of the jungle meets the
+          rhythm of your heart. We design bespoke safari experiences that blend
           adventure, comfort, and authenticity.
         </p>
 
-        <button onClick={() => navigate("/Booking")} className="heroBtn">
+        <button onClick={handleBookNow} className="heroBtn">
           Book Now...
         </button>
       </section>
@@ -63,7 +120,7 @@ export default function Home() {
             <div className="card-header">
               <FaCloudSun className="weather-header-icon" />
               <div>
-                <h3>Corbett Weather</h3>
+                <h3>{getBrandName()} Weather</h3>
                 <span className="live-pulse-badge">🔴 Live Simulation</span>
               </div>
             </div>
@@ -96,7 +153,7 @@ export default function Home() {
           {/* Zone Status Board */}
           <div className="status-card board-card">
             <div className="card-header">
-              <h3>🐅 Corbett Park Status Board</h3>
+              <h3>🐅 {getBrandName()} Park Status Board</h3>
               <span className="live-counter-badge">Active Zones: 6 / 8</span>
             </div>
 

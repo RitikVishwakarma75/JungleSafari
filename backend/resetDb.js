@@ -10,6 +10,7 @@ const Contact = require("./models/contact");
 const Guide = require("./models/guide");
 const Sighting = require("./models/sighting");
 const Newsletter = require("./models/Newsletter");
+const Review = require("./models/review");
 
 async function resetDatabase() {
   console.log("🔄 Connecting to MongoDB Atlas cloud database...");
@@ -30,6 +31,7 @@ async function resetDatabase() {
       Guide.deleteMany({}),
       Sighting.deleteMany({}),
       Newsletter.deleteMany({}),
+      Review.deleteMany({}),
     ]);
     console.log("✅ Wiped all tables clean.");
 
@@ -40,6 +42,8 @@ async function resetDatabase() {
       email: "support@corbett.com",
       phone: "+91 98765 43210",
       themeColor: "#4caf50",
+      logo: "🦁",
+      address: "Ramnagar, Uttarakhand, India",
       plan: "Enterprise",
     });
     console.log(`✅ Seeded master tenant: ${defaultTenant.name}`);
@@ -52,6 +56,43 @@ async function resetDatabase() {
       tenantId: "corbett-trails",
     });
     console.log(`✅ Seeded admin: ${defaultAdmin.email} | Pass: admin123`);
+
+    console.log("🌱 Seeding default master reviews...");
+    await Review.create([
+      {
+        name: "Rohit Sharma",
+        location: "Delhi, India",
+        rating: 5,
+        comment: "An unforgettable experience! The Dhikala safari was breathtaking and our guide was incredibly knowledgeable.",
+        avatar: "🐯",
+        tenantId: "corbett-trails",
+      },
+      {
+        name: "Sneha Kapoor",
+        location: "Mumbai, India",
+        rating: 4,
+        comment: "Loved the serene beauty of Jhirna and Garjiya zones. Perfect for family trips and photography.",
+        avatar: "🐘",
+        tenantId: "corbett-trails",
+      },
+      {
+        name: "Amit Verma",
+        location: "Bangalore, India",
+        rating: 5,
+        comment: "Phato Zone was incredible! Dense greenery and high chances of spotting tigers. Definitely recommend the treehouse stay.",
+        avatar: "🦌",
+        tenantId: "corbett-trails",
+      },
+      {
+        name: "Priya Singh",
+        location: "Noida, India",
+        rating: 4,
+        comment: "Bijrani and Dhela zones are a photographer's dream. The staff made our safari experience seamless and enjoyable.",
+        avatar: "🐒",
+        tenantId: "corbett-trails",
+      }
+    ]);
+    console.log("✅ Seeded default reviews.");
 
     console.log("\n============================================================");
     console.log("🎉 DATABASE RESET COMPLETED SUCCESSFULLY!");

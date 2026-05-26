@@ -194,3 +194,135 @@
 .review-form .cta-btn:hover {
   background-color: #1e4427;
 }
+
+/* Reviewer Wildlife Avatar and Interactive Selector */
+.reviewer-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 1rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.6rem;
+  background-color: #f1f8e9;
+  border: 2px solid #2a5934;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.avatar-selector-label {
+  display: block;
+  text-align: left;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  color: #5a4632;
+  font-size: 0.95rem;
+}
+
+.avatar-selector-grid {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.avatar-option-chip {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  transition: all 0.2s ease;
+}
+
+.avatar-option-chip:hover {
+  background: #f1f8e9;
+  border-color: #2a5934;
+}
+
+.avatar-option-chip.selected {
+  border: 2px solid #2a5934;
+  background: #e8f5e9;
+  box-shadow: 0 3px 8px rgba(42, 89, 52, 0.15);
+}
+
+.avatar-option-chip span.emoji {
+  font-size: 1.8rem;
+}
+
+.avatar-option-chip span.label {
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* ===== ⏳ PREMIUM SKELETAL PROGRESSIVE LOADER ===== */
+.reviews-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  width: 100%;
+}
+
+.skeleton-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-avatar {
+  background: #e2e8f0;
+  border: none !important;
+  animation: skeletonGlow 1.5s ease-in-out infinite;
+}
+
+.skeleton-line {
+  height: 12px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  animation: skeletonGlow 1.5s ease-in-out infinite;
+}
+
+.skeleton-title {
+  width: 50%;
+  height: 16px;
+  margin: 0 auto 12px auto;
+}
+
+.skeleton-location {
+  width: 30%;
+  margin: 0 auto 15px auto;
+}
+
+.skeleton-comment {
+  width: 90%;
+  height: 24px;
+  margin: 0 auto 15px auto;
+}
+
+.skeleton-rating {
+  width: 40%;
+  margin: 0 auto 0 auto;
+}
+
+@keyframes skeletonGlow {
+  0% {
+    background-color: #f1f3f5;
+    opacity: 0.6;
+  }
+  50% {
+    background-color: #e2e8f0;
+    opacity: 1;
+  }
+  100% {
+    background-color: #f1f3f5;
+    opacity: 0.6;
+  }
+}

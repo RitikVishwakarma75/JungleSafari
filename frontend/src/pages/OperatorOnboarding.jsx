@@ -17,6 +17,11 @@ export default function OperatorOnboarding() {
     email: "",
     phone: "",
     themeColor: "#4caf50",
+    logoType: "preset",
+    logoPreset: "🦁",
+    logoCustomUrl: "",
+    logo: "🦁",
+    address: "",
     plan: "Starter",
     password: "",
   });
@@ -34,9 +39,20 @@ export default function OperatorOnboarding() {
         .replace(/[^a-z0-9-\s]/g, "") // Allow alphanumeric, hyphens, spaces
         .replace(/\s+/g, "-");        // Convert spaces to hyphens
       setForm({ ...form, slug: formattedSlug });
+    } else if (name === "logoCustomUrl") {
+      setForm({ ...form, logoCustomUrl: value, logo: value });
     } else {
       setForm({ ...form, [name]: value });
     }
+  };
+
+  const handleLogoTypeChange = (type) => {
+    const finalLogo = type === "preset" ? form.logoPreset : form.logoCustomUrl;
+    setForm({ ...form, logoType: type, logo: finalLogo });
+  };
+
+  const handlePresetSelect = (presetVal) => {
+    setForm({ ...form, logoPreset: presetVal, logo: presetVal });
   };
 
   const validateField = (name, value) => {
@@ -46,6 +62,7 @@ export default function OperatorOnboarding() {
     if (name === "email") return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
     if (name === "phone") return /^\d{10}$/.test(value.replace(/[-()\s]/g, ""));
     if (name === "password") return value.length >= 6;
+    if (name === "address") return value.trim().length >= 5;
     return null;
   };
 
@@ -222,6 +239,132 @@ export default function OperatorOnboarding() {
                     <option value="Enterprise">Enterprise Plan ($499/mo)</option>
                   </select>
                 </div>
+
+                {/* --- UNIQUE COMPANY PHYSICAL ADDRESS --- */}
+                <div className="form-group-saas" style={{ gridColumn: "1 / -1" }}>
+                  <label>🏢 Unique Company Address * {renderValidationIndicator("address")}</label>
+                  <input
+                    type="text"
+                    name="address"
+                    className={getInputClass("address")}
+                    value={form.address}
+                    onChange={handleChange}
+                    placeholder="e.g. Near Gir National Park, Sasan Gir, Junagadh, Gujarat - 362135"
+                    required
+                  />
+                  <small className="saas-preview-text">
+                    This unique physical address will display on your branded footer and contact pages.
+                  </small>
+                </div>
+
+                {/* --- BRAND LOGO SELECTION --- */}
+                <div className="form-group-saas" style={{ gridColumn: "1 / -1", border: "1px solid rgba(255,255,255,0.1)", padding: "18px", borderRadius: "10px", background: "rgba(255,255,255,0.02)" }}>
+                  <label style={{ fontWeight: "bold", fontSize: "1rem", display: "block", marginBottom: "12px", color: "#e2e8f0" }}>🎨 Choose Your Brand Logo</label>
+                  
+                  <div className="logo-type-tabs" style={{ display: "flex", gap: "10px", marginBottom: "15px" }}>
+                    <button
+                      type="button"
+                      className={`saas-tab-btn ${form.logoType === "preset" ? "active" : ""}`}
+                      onClick={() => handleLogoTypeChange("preset")}
+                      style={{
+                        padding: "8px 16px",
+                        border: "1px solid var(--primary-color, #4caf50)",
+                        background: form.logoType === "preset" ? "var(--primary-color, #4caf50)" : "transparent",
+                        color: "#fff",
+                        borderRadius: "20px",
+                        cursor: "pointer",
+                        fontSize: "0.85rem",
+                        fontWeight: "600",
+                        transition: "all 0.3s"
+                      }}
+                    >
+                      Wildlife Icon Preset
+                    </button>
+                    <button
+                      type="button"
+                      className={`saas-tab-btn ${form.logoType === "custom" ? "active" : ""}`}
+                      onClick={() => handleLogoTypeChange("custom")}
+                      style={{
+                        padding: "8px 16px",
+                        border: "1px solid var(--primary-color, #4caf50)",
+                        background: form.logoType === "custom" ? "var(--primary-color, #4caf50)" : "transparent",
+                        color: "#fff",
+                        borderRadius: "20px",
+                        cursor: "pointer",
+                        fontSize: "0.85rem",
+                        fontWeight: "600",
+                        transition: "all 0.3s"
+                      }}
+                    >
+                      Custom Logo Image URL
+                    </button>
+                  </div>
+
+                  {form.logoType === "preset" ? (
+                    <div>
+                      <div className="logo-presets-grid" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                        {[
+                          { label: "Lion Pride", val: "🦁" },
+                          { label: "Tiger Tracks", val: "🐯" },
+                          { label: "Jumbo Safaris", val: "🐘" },
+                          { label: "Deer Trails", val: "🦌" },
+                          { label: "Eagle Eye", val: "🦅" }
+                        ].map((preset) => (
+                          <div
+                            key={preset.val}
+                            onClick={() => handlePresetSelect(preset.val)}
+                            className={`logo-preset-item ${form.logoPreset === preset.val ? "selected" : ""}`}
+                            style={{
+                              padding: "12px 20px",
+                              borderRadius: "8px",
+                              border: form.logoPreset === preset.val ? "2px solid var(--primary-color, #4caf50)" : "1px solid rgba(255,255,255,0.15)",
+                              background: form.logoPreset === preset.val ? "rgba(255,255,255,0.08)" : "transparent",
+                              cursor: "pointer",
+                              textAlign: "center",
+                              transition: "all 0.2s",
+                              flex: "1 0 100px",
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center"
+                            }}
+                          >
+                            <span style={{ fontSize: "2rem", marginBottom: "4px" }}>{preset.val}</span>
+                            <span style={{ fontSize: "0.75rem", fontWeight: "bold" }}>{preset.label}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <input
+                        type="url"
+                        name="logoCustomUrl"
+                        className={getInputClass("logoCustomUrl")}
+                        value={form.logoCustomUrl}
+                        onChange={handleChange}
+                        placeholder="https://example.com/assets/my-company-logo.png"
+                        style={{ width: "100%", padding: "10px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.15)", background: "rgba(255,255,255,0.05)", color: "#fff" }}
+                      />
+                      <small className="saas-preview-text">
+                        Provide a link to a transparent PNG or SVG logo image (looks best on light headers).
+                      </small>
+                    </div>
+                  )}
+
+                  {/* Logo Live Preview */}
+                  <div style={{ marginTop: "15px", display: "flex", alignItems: "center", gap: "10px", padding: "10px", borderRadius: "6px", background: "rgba(255,255,255,0.05)" }}>
+                    <span style={{ fontSize: "0.8rem", color: "#bbb" }}>Logo Live Preview:</span>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "42px", height: "42px", borderRadius: "50%", background: "#fff", border: "2px solid var(--primary-color, #4caf50)", color: "#333", fontSize: "1.6rem" }}>
+                      {form.logoType === "preset" ? (
+                        form.logoPreset
+                      ) : form.logoCustomUrl ? (
+                        <img src={form.logoCustomUrl} alt="Logo" style={{ width: "26px", height: "26px", objectFit: "contain" }} onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerText = '❓' }} />
+                      ) : (
+                        "❓"
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <button type="submit" className="onboard-submit-btn" disabled={loading}>
@@ -248,6 +391,23 @@ export default function OperatorOnboarding() {
                   <span className="color-swatch-saas" style={{ backgroundColor: registeredTenant.themeColor }}></span>
                   {registeredTenant.themeColor}
                 </span>
+              </div>
+              <div className="detail-item-saas">
+                <span className="detail-label">Brand Logo:</span>
+                <span className="detail-value flex-align" style={{ gap: "10px" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "32px", height: "32px", borderRadius: "50%", background: "#fff", border: "1px solid #ddd", color: "#333", fontSize: "1.2rem" }}>
+                    {registeredTenant.logo && registeredTenant.logo.startsWith("http") ? (
+                      <img src={registeredTenant.logo} alt="Logo" style={{ width: "22px", height: "22px", objectFit: "contain" }} />
+                    ) : (
+                      registeredTenant.logo || "🦁"
+                    )}
+                  </div>
+                  <span className="font-mono">{registeredTenant.logo || "Default (🦁)"}</span>
+                </span>
+              </div>
+              <div className="detail-item-saas">
+                <span className="detail-label">Physical Address:</span>
+                <span className="detail-value font-bold">{registeredTenant.address || "Not Specified"}</span>
               </div>
               <div className="detail-item-saas">
                 <span className="detail-label">Billing Plan:</span>

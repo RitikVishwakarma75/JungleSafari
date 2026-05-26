@@ -447,6 +447,49 @@ function getMockSightingPrediction(zone, date) {
   };
 }
 
+/**
+ * 5. AI Campfire Story Generator
+ */
+async function generateCampfireStory(topic, mode) {
+  if (hasApiKey() && ai) {
+    try {
+      const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const prompt = `
+        You are a seasoned Kumaoni naturalist and campfire narrator at Jim Corbett National Park.
+        Tell a thrilling, historically rich, and highly atmospheric campfire story about this topic: "${topic}".
+        Use a "${mode}" narration style (e.g. suspenseful, adventurous, mysterious, informative).
+        
+        Write a highly descriptive story (around 300 words) with pauses, sound effects in brackets like [crackling branches] or [distant tiger roar], and rich local Kumaoni forest terms (sal trees, machan, nullah, Kumaon hills). 
+        Make it sound authentic, warm, and highly engaging. Do not use generic placeholders.
+      `;
+      const result = await model.generateContent(prompt);
+      return result.response.text().trim();
+    } catch (err) {
+      console.warn("Gemini Campfire Story API Error, falling back to mock:", err.message);
+    }
+  }
+
+  return getMockCampfireStory(topic, mode);
+}
+
+function getMockCampfireStory(topic, mode) {
+  const normalizedTopic = (topic || "").toLowerCase();
+  
+  if (normalizedTopic.includes("mohan") || normalizedTopic.includes("tiger")) {
+    return `Listen closely... [popping fire embers] The year was 1928, deep in the Mohan valley. The Kumaoni villagers spoke in hushed whispers of a massive shadow that stalked the towering sal forests. It was no ordinary predator, but the legendary Mohan Man-Eater. Jim Corbett himself lay in wait on a frail bamboo machan, the mountain wind blowing bitterly cold against his face. As midnight struck, a deep, resonant rumble [low tiger growl] vibrated through the dense undergrowth. The forest went dead silent—even the cicadas stopped. The tiger emerged like a ghost from the moonlit mist, its amber eyes locking directly onto the machan. Jim held his breath, his rifle steady, knowing one wrong move would be his last...`;
+  }
+  
+  if (normalizedTopic.includes("machan") || normalizedTopic.includes("leopard")) {
+    return `The night air is thick with the scent of pine and damp river clay [distant owl hoot]. Sitting on a rustic wooden machan fifteen feet above the jungle floor in Bijrani Zone, your hands are shivering. Below you, the dry leaves rustle. [snap of a dry branch] Your eyes strain in the darkness. Suddenly, a sleek golden coat adorned with dark rosettes emerges into the pale moonlight—a leopards, moving with fluid, liquid grace. It glances up toward your machan, its emerald eyes shining like hot coals in the dark, before melting back into the shadows of the Kumaon forest as silently as it came.`;
+  }
+
+  if (normalizedTopic.includes("elephant") || normalizedTopic.includes("call")) {
+    return `The misty riverbeds of Dhikala are quiet as dusk falls [river murmuring]. Suddenly, a booming trumpet [loud elephant trumpet] echoes across the valley, shaking the leaves of the Rohini trees. A massive tusker, the patriarch of the herd, leads fifteen elephants out of the tall elephant grass down to the Ramganga riverbank. They move like grey mountains against the sunset. A young calf splashes playfully in the shallow water, shielded by the protective circle of the grand matriarchs. It is a timeless scene of Kumaon's true ancient rulers, untouched by the outside world.`;
+  }
+
+  return `The campfire crackles warm against the deep chill of the forest night [popping wood embers]. In the distance, a spotted deer gives a sharp, barking alarm call—*Aap! Aap!* The jungle is instantly alert. A predator is on the move in the pitch dark. As Kumaoni naturalists, we learn to read these secret signs—the warning chatter of the langur monkeys, the sudden, frightened flight of the peacocks. The forest is a living, breathing story, and tonight, sitting here by the fire, you are part of it. Rest warm, for tomorrow at dawn, we track the king of Kumaon...`;
+}
+
 function getMockImageAnalysis(imageBase64) {
   // Select a mock wildlife analysis dynamically to make scans feel interactive and realistic
   const items = [
@@ -486,4 +529,5 @@ module.exports = {
   parseChatSession,
   predictSighting,
   analyzeImage,
+  generateCampfireStory,
 };

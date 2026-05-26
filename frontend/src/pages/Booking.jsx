@@ -15,6 +15,53 @@ const getApiUrl = (path) => {
 export default function Booking() {
   const navigate = useNavigate();
   const { tenantSlug } = useParams();
+  const [tenantConfig, setTenantConfig] = useState(null);
+
+  useEffect(() => {
+    if (!tenantSlug) {
+      setTenantConfig(null);
+      return;
+    }
+
+    const cachedKey = `tenant_config_${tenantSlug}`;
+    const cached = sessionStorage.getItem(cachedKey);
+    if (cached) {
+      try {
+        setTenantConfig(JSON.parse(cached));
+        return;
+      } catch (err) {
+        console.warn("Failed parsing cached config in booking, refetching...", err);
+      }
+    }
+
+    const fetchTenant = async () => {
+      try {
+        const base =
+          window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+            ? "http://localhost:5000"
+            : "https://junglesafari-s1dr.onrender.com";
+        const res = await fetch(`${base}/api/tenant/${tenantSlug}`);
+        if (res.ok) {
+          const data = await res.json();
+          sessionStorage.setItem(cachedKey, JSON.stringify(data));
+          setTenantConfig(data);
+        }
+      } catch (err) {
+        console.error("Failed to load tenant configurations in booking:", err);
+      }
+    };
+
+    fetchTenant();
+  }, [tenantSlug]);
+
+  const getBrandName = () => {
+    if (tenantConfig && tenantConfig.name) return tenantConfig.name;
+    if (!tenantSlug) return "Corbett Trails";
+    return tenantSlug
+      .split("-")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+  };
   
   // State for form fields
   const [form, setForm] = useState({
@@ -198,7 +245,7 @@ export default function Booking() {
       <div className="booking-hero">
         <div className="overlay"></div>
         <div className="hero-text">
-          <h1>Book Your Corbett Safari</h1>
+          <h1>Book Your {getBrandName()} Safari</h1>
           <p>
             Choose your zone, dates, and safari type for an unforgettable
             wildlife adventure.
@@ -224,11 +271,15 @@ export default function Booking() {
         </div>
       </div>
 
+      {/* SECTION HEADER */}
+      <div className="booking-section-header no-print">
+        <h2>Reserve Your Safari</h2>
+        <p>Fill out the form below to confirm your adventure.</p>
+      </div>
+
       {/* BOOKING FORM & AI PREDICTOR WRAPPER */}
       <div className="booking-main-content">
         <div className="booking-container">
-          <h2>Reserve Your Safari</h2>
-          <p>Fill out the form below to confirm your adventure.</p>
           <form className="booking-form" onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Full Name * {renderValidationIndicator("fullName")}</label>
@@ -460,8 +511,12 @@ export default function Booking() {
             
             {!form.zone || !form.date ? (
               <div className="predictor-empty-state">
-                <div className="compass-icon">🧭</div>
-                <h4>Select Zone & Date</h4>
+                <div className="compass-icon-wrapper">
+                  <div className="compass-pulse-ring"></div>
+                  <div className="compass-pulse-ring-outer"></div>
+                  <div className="compass-icon">🧭</div>
+                </div>
+                <h4>Ready to Forecast Wildlife?</h4>
                 <p>Pick a safari zone and visit date to trigger our AI Wildlife Probability Forecast.</p>
               </div>
             ) : predicting ? (
@@ -510,12 +565,14 @@ export default function Booking() {
       <div className="booking-cta">
         <h2>Answer the Call of the Wild</h2>
         <p>
-          Adventure, serenity, and the roar of the jungle await. Step into Jim
-          Corbett National Park today.
+          Adventure, serenity, and the roar of the jungle await. Step into the wilderness today.
         </p>
         <button
           className="cta-btn"
-          onClick={() => navigate("/#contact-form")}
+          onClick={() => {
+            if (tenantSlug) navigate(`/${tenantSlug}/contact#contact-form`);
+            else navigate("/contact#contact-form");
+          }}
         >
           Contact Our Team
         </button>
@@ -545,7 +602,7 @@ export default function Booking() {
               <div className="ticket-pass-header">
                 <div className="ticket-pass-logo">
                   <h3>JUNGLE SAFARI</h3>
-                  <span>Corbett National Park Entry Permit</span>
+                  <span>{getBrandName()} Entry Permit</span>
                 </div>
                 <div className="ticket-pass-badge">
                   OFFICIAL PASS

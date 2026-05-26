@@ -15,8 +15,12 @@ export default function Safari() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const base =
+        window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+          ? "http://localhost:5000"
+          : "https://junglesafari-s1dr.onrender.com";
       const res = await fetch(
-        "https://junglesafari-s1dr.onrender.com/api/booking",
+        `${base}/api/booking`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

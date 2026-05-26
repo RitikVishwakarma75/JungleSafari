@@ -20,6 +20,7 @@ import JunglePlanner from "./pages/JunglePlanner";
 import Sightings from "./pages/Sightings";
 import GuidePortal from "./pages/GuidePortal";
 import OperatorOnboarding from "./pages/OperatorOnboarding";
+import AiCampfire from "./pages/AiCampfire";
 
 import "./App.css";
 
@@ -67,6 +68,9 @@ export default function App() {
         
         <Route path="/sightings" element={<Sightings />} />
         <Route path="/:tenantSlug/sightings" element={<Sightings />} />
+
+        <Route path="/campfire" element={<AiCampfire />} />
+        <Route path="/:tenantSlug/campfire" element={<AiCampfire />} />
 
         <Route path="/team" element={<Team />} />
         <Route path="/:tenantSlug/team" element={<Team />} />

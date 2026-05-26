@@ -21,6 +21,7 @@ export default function AdminDashboard() {
   const [error, setError] = useState("");
   const [filter, setFilter] = useState("all");
   const [tenantName, setTenantName] = useState("SaaS Operator");
+  const [tenantId, setTenantId] = useState("corbett-trails");
 
   // 🔒 Protect dashboard + fetch bookings & guides
   useEffect(() => {
@@ -50,6 +51,7 @@ export default function AdminDashboard() {
 
         // 3. Fetch Tenant configuration for brand name
         const savedTenantId = localStorage.getItem("adminTenantId") || "corbett-trails";
+        setTenantId(savedTenantId);
         try {
           const tenantRes = await fetch(getApiUrl(`/api/tenant/${savedTenantId}`));
           if (tenantRes.ok) {
@@ -187,6 +189,87 @@ export default function AdminDashboard() {
               </div>
             </div>
           </section>
+
+          {/* 🔗 BRANDED WEBSITE LINKS FOR ADMIN */}
+          <div className="branded-links-card" style={{
+            background: "rgba(255, 255, 255, 0.04)",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
+            borderRadius: "12px",
+            padding: "20px",
+            marginBottom: "25px",
+            marginTop: "20px",
+            color: "#fff",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.15)"
+          }}>
+            <h3 style={{ margin: "0 0 8px 0", fontSize: "1.1rem", color: "#81c784", display: "flex", alignItems: "center", gap: "8px", fontWeight: "700" }}>
+              🔗 Your Scoped Website Portals
+            </h3>
+            <p style={{ margin: "0 0 15px 0", fontSize: "0.85rem", color: "#cbd5e1", lineHeight: "1.4" }}>
+              These are your unique, white-labeled client website links. Share these with your customers to accept bookings!
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "15px" }}>
+              {[
+                { label: "Branded Client Home Portal", path: "" },
+                { label: "Safari Booking Engine", path: "/booking" },
+                { label: "AI Jungle Planner", path: "/planner" }
+              ].map((link, idx) => {
+                const getBrandedUrl = (subPath) => {
+                  if (tenantId === "corbett-trails") {
+                    return `${window.location.origin}${subPath}`;
+                  }
+                  return `${window.location.origin}/${tenantId}${subPath}`;
+                };
+                const fullUrl = getBrandedUrl(link.path);
+                return (
+                  <div key={idx} style={{ background: "rgba(0,0,0,0.25)", padding: "12px 15px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", gap: "8px" }}>
+                    <strong style={{ fontSize: "0.85rem", color: "#fff", letterSpacing: "0.5px" }}>{link.label}</strong>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <input
+                        type="text"
+                        readOnly
+                        value={fullUrl}
+                        style={{
+                          flexGrow: 1,
+                          background: "rgba(0,0,0,0.35)",
+                          border: "1px solid rgba(255,255,255,0.1)",
+                          borderRadius: "4px",
+                          padding: "6px 10px",
+                          color: "#81c784",
+                          fontSize: "0.8rem",
+                          fontFamily: "monospace",
+                          outline: "none"
+                        }}
+                      />
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(fullUrl);
+                          alert("Link copied to clipboard! 📋");
+                        }}
+                        style={{
+                          background: "#81c784",
+                          border: "none",
+                          borderRadius: "4px",
+                          padding: "6px 12px",
+                          color: "#1e293b",
+                          fontSize: "0.8rem",
+                          fontWeight: "bold",
+                          cursor: "pointer",
+                          transition: "opacity 0.2s"
+                        }}
+                        onMouseOver={(e) => e.target.style.opacity = 0.9}
+                        onMouseOut={(e) => e.target.style.opacity = 1}
+                      >
+                        Copy
+                      </button>
+                    </div>
+                    <a href={fullUrl} target="_blank" rel="noopener noreferrer" style={{ alignSelf: "flex-start", fontSize: "0.75rem", color: "#60a5fa", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "4px", fontWeight: "600" }}>
+                      Open Portal ↗
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
 
           {/* 🔍 FILTER BAR */}
           <div className="filter-bar">
