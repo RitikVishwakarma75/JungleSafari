@@ -107,14 +107,16 @@ router.post("/forgot-password", async (req, res) => {
     const resetUrl = `${process.env.FRONTEND_URL}/admin/reset-password/${rawToken}`;
     console.log("🔗 Reset URL:", resetUrl);
 
-    console.log("📨 About to send email...");
-    await sendEmail({
+    console.log("📨 About to send email (non-blocking)...");
+    sendEmail({
       to: admin.email,
       subject: "Admin Password Reset",
       html: `<a href="${resetUrl}">Reset Password</a>`,
+    }).then(() => {
+      console.log("✅ Email sent successfully");
+    }).catch((err) => {
+      console.error("❌ Failed to send forgot-password email to admin:", err);
     });
-
-    console.log("✅ Email sent successfully");
 
     res.json({
       message: "If this email exists, a reset link has been sent",
@@ -194,9 +196,11 @@ router.patch("/bookings/:id", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: "Booking not found" });
     }
 
-    // Dynamic Boarding ticket trigger
+    // Dynamic Boarding ticket trigger (non-blocking)
     if (status === "approved") {
-      await sendTicketEmail(booking);
+      sendTicketEmail(booking).catch((err) => {
+        console.error("❌ Failed to send boarding ticket email on approval:", err);
+      });
     }
 
     res.json(booking);

@@ -20,8 +20,8 @@ router.post("/newsletter", async (req, res) => {
 
     await Newsletter.create({ email });
 
-    // Send newsletter subscription email!
-    await sendEmail({
+    // Send newsletter subscription email! (non-blocking)
+    sendEmail({
       to: email,
       subject: "🌿 Welcome to the Jungle Safari Newsletter!",
       html: `
@@ -45,10 +45,12 @@ router.post("/newsletter", async (req, res) => {
           </div>
         </div>
       `
+    }).catch((err) => {
+      console.error("❌ Failed to send newsletter subscription email to client:", err);
     });
 
-    // Also send an email notification to the admin/owner vishwakarmaritik722@gmail.com
-    await sendEmail({
+    // Also send an email notification to the admin/owner vishwakarmaritik722@gmail.com (non-blocking)
+    sendEmail({
       to: "vishwakarmaritik722@gmail.com",
       subject: `📧 New Newsletter Subscriber: ${email}`,
       html: `
@@ -62,6 +64,8 @@ router.post("/newsletter", async (req, res) => {
           </div>
         </div>
       `
+    }).catch((err) => {
+      console.error("❌ Failed to send newsletter admin notification:", err);
     });
 
     res.status(201).json({ message: "Subscribed successfully 🌿" });
