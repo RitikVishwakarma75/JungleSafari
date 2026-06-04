@@ -125,6 +125,8 @@ async function sendTicketEmail(booking) {
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,
         },
+        connectionTimeout: 3000, // 3 seconds timeout
+        socketTimeout: 3000, // 3 seconds socket timeout
       });
       console.log(`🔌 [Nodemailer] Using SMTP Transporter configured for user: ${process.env.SMTP_USER}`);
     } else {
